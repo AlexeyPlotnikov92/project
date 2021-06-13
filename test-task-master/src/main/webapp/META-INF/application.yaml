@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:hsqldb:file:my/myb
+    username: joe
+    password: password
+    driver-class-name: org.hsqldb.jdbcDriver

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Переход на страницу банка</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<a href="/admin">Admin Panel</a>
+<hr>
+<h2>Добавить банк</h2>
+<form method="post" action="/admin/banks">
+    <p> Название банка <input name="name"></p>
+    <p>Добавить клиента <select name="clientId">
+        <option th:each="client : ${clients}"
+                th:text="${client.foolName}"
+                th:value="${client.id}"></option>
+    </select>
+    <p>Добавить кредит <select name="creditId">
+        <option th:each="credit : ${credits}"
+                th:value="${credit.id}"
+                th:text="${credit.name}"></option>
+    </select>
+    <button name="submit">Добавить</button>
+</form>
+<hr>
+<H2>Все кредиты:</H2>
+<div th:each="bank: ${banks}">
+    <a th:href="${'/admin/banks/'+bank.id}" th:text="${bank.name}"></a>
+    <hr>
+</div>
+</body>
+</html>

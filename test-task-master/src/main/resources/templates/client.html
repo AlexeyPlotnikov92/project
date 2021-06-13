@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Client</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<hr>
+<a href="/admin/clients">Список клиентов</a>
+<a href="/admin">Admin Panel</a>
+<hr>
+<h2>Информация о клиенте</h2>
+<p th:text="${'ФИО клиента: ' + client.foolName}"></p>
+<p th:text="${'Номер телефона: ' + client.telephoneNumber}"></p>
+<p th:text="${'Электронный адрес: ' + client.eMailAdress}"></p>
+<p th:text="${'Номер паспорта: ' + client.passportNumber}"></p>
+<hr>
+<h2>Изменить информацию</h2>
+<form method="post" th:action="${'/admin/clients/'+id}">
+    <p>ФИO клиента: <input name="foolName" th:value="${client.foolName}">
+    <p>Номер телефона: <input name="phoneNumber" th:value="${client.telephoneNumber}">
+    <p>Электронный адрес: <input name="eMail" th:value="${client.eMailAdress}">
+    <p>Номер паспорта: <input name="passportNumber" th:value="${client.passportNumber}">
+    <p><button name="submit">Изменить</button>
+</form>
+<hr>
+<h2>Удалить клиента</h2>
+<form method="post" th:action="${'/admin/clients/'+id+'/remove'}">
+    <button name="submit">Удалить</button>
+</form>
+</body>
+</html>

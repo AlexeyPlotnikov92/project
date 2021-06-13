@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Offer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<a href="/admin/banks/{bank.is}/offers"> кредитные предложения</a>
+<a href="/admin"> Admin Panel</a>
+<H2>Данные о предложении</H2>
+<!--<p th:text="${'book '+ book}"/></p>-->
+<p th:text="${'Сумма предложения: ' + offer.creditAmount}"></p>
+<option th:each="pay : ${offer.creditPayments}"
+        th:text="${pay.amountPayment +' дата ' + pay.paymentDate}"></option>
+<hr>
+<h3>Изменить данные</h3>
+<form method="post" th:action="${'/admin/offers/'+offer.id}">
+    <p>Клиент <select name="clientId">
+        <option th:each="client : ${clients}"
+                th:text="${client.foolName}"
+                th:value="${client.id}"
+                th:selected="${client.id=clientOffer.id}"></option>
+    </select>
+    <p>Выбрать кредит <select name="creditId">
+        <option th:each="credit : ${credits}"
+                th:value="${credit.id}"
+                th:text="${credit.name}"
+                th:selected="${credit.id=creditOffer.id}"></option>
+    </select>
+    <p>Сумма кредита <input name="creditAmount" th:value="${offer.creditAmount}">
+    <p>
+        <button name="submit">Изменить</button>
+</form>
+<hr>
+<h3>Удалить</h3>
+<form method="post" th:action="${'/admin/banks/banks.id/offers/'+offer.id+'/remove'}">
+    <button name="submit">Удалить</button>
+</form>
+</body>
+</html>

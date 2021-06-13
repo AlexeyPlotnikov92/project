@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кредитные предложения</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<a href="/admin">Admin Panel</a>
+<hr>
+<body>
+<form method="post" action="/admin/banks/+'bank.id'+/offers">
+    <p>Клиент <select name="clientId">
+        <option th:each="client : ${clients}"
+                th:value="${client.id}"
+                th:text="${client.foolName}"></option>
+    </select>
+    <p>Кредит <select name="creditId">
+        <option th:each="credit : ${credits}"
+                th:value="${credit.id}"
+                th:text="${credit.name}"></option>
+    </select>
+    <p>Сумма кредита <input name="creditAmount">
+        <button name="submit">Submit</button>
+</form>
+<p>Список кредитных предложений</p>
+<div th:each="offer: ${offers}">
+    <a th:href="${'/admin/banks/'+bank.id+'/offers/'+offer.id}" th:text="${offer.name}"></a>
+    <hr>
+</div>
+</body>
+</html>

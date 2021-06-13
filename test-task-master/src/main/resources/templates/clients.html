@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clients</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Клиенты</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    </head>
+<body>
+<a href="/admin">Admin Panel</a>
+<hr>
+<form method="post" action="/admin/clients">
+    <input name="foolName">
+    <input name="phoneNumber">
+    <input name="eMail">
+    <input name="passportNumber">
+    <button name="submit">Submit</button>
+</form>
+<p>Список клиентов</p>
+<div th:each="client: ${clients}">
+    <a th:href="${'/admin/clients/'+client.id}" th:text="${client.foolName}"></a>
+    <hr>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Credits</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<a href="/admin">Admin Panel</a>
+<hr>
+<h2>Добавить кредит</h2>
+<form method="post" action="/admin/credits">
+    <p> Лимит кредита <input name="creditLimit"></p>
+    <p> Процентная ставка <input name="interestRate"></p>
+    <button name="submit">Добавить</button>
+</form>
+<hr>
+<H2>Все кредиты:</H2>
+<div th:each="credit: ${credits}">
+    <a th:href="${'/admin/credits/'+credit.id}" th:text="${credit.name}"></a>
+    <hr>
+</div>
+</body>
+</html>

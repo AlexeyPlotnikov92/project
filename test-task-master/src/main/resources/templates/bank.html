@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<a href="/admin">Admin Panel</a>
+<hr>
+<H2>Данные о Банке</H2>
+<p>Список клиентов
+    <option th:each="client : ${bankClients}"
+            th:text="${client.foolName}"></option>
+<p>Список кредитов
+    <option th:each="credit : ${bankCredits}"
+            th:text="${credit.name}"></option>
+<hr>
+<H2>Перейти к кредитным предложениям</H2>
+    <a th:href="${'/admin/banks/'+bank.id+'/offers'}" th:text="${bank.name}"></a>
+<h3>Добавить данные</h3>
+<form method="post" th:action="${'/admin/banks/'+bank.id}">
+    <p>Название банка: <input name="name" th:value="${bank.name}">
+    <p>Добавить клиента <select name="clientId">
+        <option th:each="client : ${clients}"
+                th:text="${client.foolName}"
+                th:value="${client.id}"></option>
+    </select>
+    <p>Добавить кредит <select name="creditId">
+        <option th:each="credit : ${credits}"
+                th:value="${credit.id}"
+                th:text="${credit.name}"></option>
+    </select>
+    <p> <button name="submit">Изменить</button>
+</form>
+<hr>
+</body>
+</html>

@@ -44,7 +44,7 @@ public class InitDB {
         boolean exists = false;
         if (!exists) {
             jdbcTemplate.execute("CREATE TABLE clients (\n" +
-                    "   id VARCHAR(50) NOT NULL,\n" +
+                    "   id VARCHAR(50) NOT NULL, \n" +
                     "   fool_name VARCHAR(50) NOT NULL,\n" +
                     "   telephone_number VARCHAR(20) NOT NULL,\n" +
                     "    email VARCHAR(50) NOT NULL,\n" +

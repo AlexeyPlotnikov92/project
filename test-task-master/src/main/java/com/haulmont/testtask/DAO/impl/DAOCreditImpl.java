@@ -1,7 +1,6 @@
 package com.haulmont.testtask.DAO.impl;
 
 import com.haulmont.testtask.DAO.DAOCredit;
-import com.haulmont.testtask.Entity.Client;
 import com.haulmont.testtask.Entity.Credit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -77,14 +76,18 @@ public class DAOCreditImpl implements DAOCredit {
 
     @Override
     public Credit save(Credit credit) {
-        if (credit.getId() == null) {
-            Credit saveCredit = new Credit(UUID.randomUUID().toString(),
-                    credit.getCreditLimit(),
-                    credit.getInterestRate(),
-                    credit.getBankId());
-            return insertCredit(saveCredit);
+        if (credit.getCreditLimit() < 0 || credit.getInterestRate() < 0) {
+            if (credit.getId() == null) {
+                Credit saveCredit = new Credit(UUID.randomUUID().toString(),
+                        credit.getCreditLimit(),
+                        credit.getInterestRate(),
+                        credit.getBankId());
+                return insertCredit(saveCredit);
+            } else {
+                return updateCredit(credit);
+            }
         } else {
-            return updateCredit(credit);
+            throw new IllegalArgumentException("only positive number");
         }
     }
 

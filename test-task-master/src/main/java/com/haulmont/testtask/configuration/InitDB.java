@@ -61,8 +61,7 @@ public class InitDB {
                     "   id VARCHAR(50) NOT NULL,\n" +
                     "   client_id VARCHAR(50) NOT NULL,\n" +
                     "   credit_id VARCHAR(50) NOT NULL,\n" +
-                    "   credit_amount INT NOT NULL,\n " +
-                    "   date VARCHAR(50) NOT NULL, \n " +
+                    "   credit_amount INT NOT NULL, " +
                     "    PRIMARY KEY (id) " +
                     ");");
             jdbcTemplate.execute("CREATE TABLE banks (\n" +

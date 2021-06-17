@@ -2,7 +2,6 @@ package com.haulmont.testtask.DAO;
 
 import com.haulmont.testtask.Entity.Offer;
 
-import java.text.ParseException;
 import java.util.List;
 
 public interface DAOOffer {
@@ -10,7 +9,7 @@ public interface DAOOffer {
 
     Offer findById(String id);
 
-    Offer save(Offer offer) throws ParseException;
+    Offer save(Offer offer);
 
     void delete(String id);
 }

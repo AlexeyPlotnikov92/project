@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,25 +19,21 @@ public class Offer {
     private Integer creditAmount;
     private List<CreditPayment> creditPayments;
     private String name;
-    private String date;
 
-    public Offer(String id, Client client, Credit credit, Integer creditAmount, String date) throws ParseException {
+    public Offer(String id, Client client, Credit credit, Integer creditAmount) {
         this.id = id;
         this.client = client;
         this.credit = credit;
         this.creditAmount = creditAmount;
-        this.date = date;
-        this.creditPayments = loanCalculation(credit, creditAmount, date);
+        this.creditPayments = loanCalculation(credit, creditAmount);
         name = "Кредит на  " + creditAmount + " рублей для " + client.getFoolName();
     }
 
-    private List<CreditPayment> loanCalculation(Credit credit, Integer creditAmount, String date) throws ParseException {
+    private List<CreditPayment> loanCalculation(Credit credit, Integer creditAmount) {
         List<CreditPayment> creditPayments = new ArrayList<>();
         int fullSum = creditAmount + creditAmount * credit.getInterestRate() / 100;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-        Date tempDate = dateFormat.parse(date);
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(tempDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
         for (int i = 0; i < 12; i++) {
             calendar.roll(Calendar.MONTH, +1);
             if (calendar.get(Calendar.MONTH) == Calendar.JANUARY) {

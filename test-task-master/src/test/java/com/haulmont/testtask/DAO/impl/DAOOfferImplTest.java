@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
 
@@ -28,7 +26,7 @@ class DAOOfferImplTest extends ApplicationTest {
     DAOOffer daoOffer;
 
     @Test
-    void checkCrud() throws ParseException {
+    void checkCrud() {
         int initialSize = daoOffer.findAll().size();
         Random random = new Random();
         String expectedFoolName = UUID.randomUUID().toString();
@@ -42,7 +40,7 @@ class DAOOfferImplTest extends ApplicationTest {
         Credit credit = daoCredit.save(new Credit(null, expectedCreditLimit, expectedInterestRate, "a"));
 
         int expectedCreditAmount = random.nextInt(expectedCreditLimit);
-        Offer offer = daoOffer.save(new Offer(null, client, credit, expectedCreditAmount, Calendar.getInstance().toString()));
+        Offer offer = daoOffer.save(new Offer(null, client, credit, expectedCreditAmount));
         Assertions.assertNotNull(offer.getId());
         Assertions.assertEquals(client, offer.getClient());
         Assertions.assertEquals(credit, offer.getCredit());
@@ -56,7 +54,7 @@ class DAOOfferImplTest extends ApplicationTest {
         int updatedCreditAmount = random.nextInt(expectedCreditAmount);
         Client client1 = daoClient.save(new Client(null, expectedFoolName, expectedTelephoneNumber, expectedEMail, expectedPasspotrNumber + 1, "a"));
         Credit credit1 = daoCredit.save(new Credit(null, expectedCreditLimit + 1, expectedInterestRate - 1, "a"));
-        daoOffer.save(new Offer(offer.getId(), client1, credit1, updatedCreditAmount,Calendar.getInstance().toString()));
+        daoOffer.save(new Offer(offer.getId(), client1, credit1, updatedCreditAmount));
         Assertions.assertEquals(initialSize + 1, daoOffer.findAll().size());
         Assertions.assertNotEquals(byId, offer);
 
@@ -65,8 +63,8 @@ class DAOOfferImplTest extends ApplicationTest {
         Assertions.assertEquals(client1.getId(), byId.getClient().getId());
         Assertions.assertEquals(credit1.getId(), byId.getCredit().getId());
         Assertions.assertEquals(updatedCreditAmount, byId.getCreditAmount());
-        Offer offer1 = new Offer(null,client,credit,expectedCreditLimit+3,Calendar.getInstance().toString());
-        Assertions.assertThrows(IllegalStateException.class,  () -> {
+        Offer offer1 = new Offer(null, client, credit, expectedCreditLimit + 3);
+        Assertions.assertThrows(IllegalStateException.class, () -> {
             daoOffer.save((offer1));
         });
 

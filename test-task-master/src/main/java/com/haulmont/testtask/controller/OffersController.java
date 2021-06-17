@@ -10,9 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
 @Controller
 @RequestMapping("/admin/offers")
 public class OffersController {
@@ -55,11 +52,11 @@ public class OffersController {
     @PostMapping
     public ModelAndView createOffer(@RequestParam String clientId,
                                     @RequestParam String creditId,
-                                    @RequestParam Integer creditAmount) throws ParseException {
+                                    @RequestParam Integer creditAmount) {
         Offer offer = new Offer(null,
                 daoClient.findById(clientId),
                 daoCredit.findById(creditId),
-                creditAmount, Calendar.getInstance().toString());
+                creditAmount);
         daoOffer.save(offer);
         return new ModelAndView("redirect:/admin/offers");
     }
@@ -68,8 +65,8 @@ public class OffersController {
     public ModelAndView updateOffer(@PathVariable String id,
                                     @RequestParam String clientId,
                                     @RequestParam String creditId,
-                                    @RequestParam Integer creditAmount) throws ParseException {
-        Offer offer = new Offer(id, daoClient.findById(clientId), daoCredit.findById(creditId), creditAmount, Calendar.getInstance().toString());
+                                    @RequestParam Integer creditAmount) {
+        Offer offer = new Offer(id, daoClient.findById(clientId), daoCredit.findById(creditId), creditAmount);
         daoOffer.save(offer);
         return new ModelAndView("redirect:/admin/offers");
     }

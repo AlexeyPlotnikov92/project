@@ -7,7 +7,8 @@ import com.haulmont.testtask.DAO.DAOOffer;
 import com.haulmont.testtask.Entity.Bank;
 import com.haulmont.testtask.Entity.Client;
 import com.haulmont.testtask.Entity.Credit;
-import com.haulmont.testtask.Entity.Offer;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,19 +16,18 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/admin/banks")
 public class BankController {
     private final DAOBank daoBank;
     private final DAOClient daoClient;
     private final DAOCredit daoCredit;
-    private final DAOOffer daoOffer;
 
     public BankController(DAOBank daoBank, DAOClient daoClient, DAOCredit daoCredit, DAOOffer daoOffer) {
         this.daoBank = daoBank;
         this.daoClient = daoClient;
         this.daoCredit = daoCredit;
-        this.daoOffer = daoOffer;
     }
 
 
@@ -45,11 +45,10 @@ public class BankController {
         ModelAndView modelAndView = new ModelAndView("bank");
         Bank bank = daoBank.findById(id);
         modelAndView.addObject("bank", bank);
-        modelAndView.addObject("bankId", id);
-        modelAndView.addObject("clients", daoClient.findAll());
-        modelAndView.addObject("credits", daoCredit.findAll());
-        modelAndView.addObject("bankClients", daoClient.findClients(id));
-        modelAndView.addObject("bankCredits", daoCredit.findCredits(id));
+        modelAndView.addObject("credits", daoCredit.findCreditsWithoutBank(id));
+        modelAndView.addObject("bankClients", bank.getClients());
+        modelAndView.addObject("bankCredits", bank.getCredits());
+        modelAndView.addObject("clients", daoClient.findClientWithoutBank(id));
         return modelAndView;
     }
 
@@ -58,92 +57,43 @@ public class BankController {
                                    @RequestParam String clientId,
                                    @RequestParam String creditId) {
         List<Client> clients = new ArrayList<>();
-        clients.add(daoClient.findById(clientId));
+        if (StringUtils.isNotEmpty(clientId)) {
+            clients.add(daoClient.findById(clientId));
+        }
         List<Credit> credits = new ArrayList<>();
-        credits.add(daoCredit.findById(creditId));
+        if (StringUtils.isNotEmpty(creditId)) {
+            credits.add(daoCredit.findById(creditId));
+        }
         Bank bank = new Bank(null, name, clients, credits);
-        daoBank.save(bank);
-        ModelAndView modelAndView = new ModelAndView("banks");
-        modelAndView.addObject("banks", daoBank.findAll());
-        return modelAndView;
+        Bank saveBank = daoBank.save(bank);
+        log.info("create bank {}", saveBank.getId());
+        return new ModelAndView("redirect:/admin/banks");
     }
 
     @PostMapping("/{id}")
     public ModelAndView updateBank(@PathVariable String id,
                                    @RequestParam String name,
-                                   @RequestParam String clientId,
-                                   @RequestParam String creditId) {
+                                   @RequestParam(required = false) String clientId,
+                                   @RequestParam(required = false) String creditId) {
         List<Client> clients = daoBank.findById(id).getClients();
-        clients.add(daoClient.findById(clientId));
+        if (StringUtils.isNotEmpty(clientId)) {
+            clients.add(daoClient.findById(clientId));
+        }
         List<Credit> credits = daoBank.findById(id).getCredits();
-        credits.add(daoCredit.findById(creditId));
+        if (StringUtils.isNotEmpty(creditId)) {
+            credits.add(daoCredit.findById(creditId));
+        }
         Bank bank = new Bank(id, name, clients, credits);
         daoBank.save(bank);
-        return new ModelAndView("redirect:/admin/banks/{id}");
+        log.info("update bank{}", bank.getId());
+        return new ModelAndView("redirect:/admin/banks");
     }
 
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
+        log.info("update bank{}", daoBank.findById(id));
+        daoBank.delete(id);
         return new ModelAndView("redirect:/admin/banks");
     }
 
-    @GetMapping("/{id}/offers")
-    public ModelAndView getOffers(@PathVariable(value = "id") String id) {
-        ModelAndView modelAndView = new ModelAndView("offers");
-        Bank bank = daoBank.findAll().get(0);
-        modelAndView.addObject("offers", daoOffer.findAll());
-        modelAndView.addObject("bank", bank);
-        modelAndView.addObject("clients", bank.getClients());
-        modelAndView.addObject("credits", bank.getCredits());
-        return modelAndView;
-    }
-
-    @GetMapping("/{id}/offers/{offerId}")
-    public ModelAndView getOfferById(@PathVariable(value = "id") String bankId,
-                                     @PathVariable(value = "offerId") String offerId) {
-        Offer offer = daoOffer.findById(offerId);
-        ModelAndView modelAndView = new ModelAndView("offer");
-        Bank bank = daoBank.findAll().get(0);
-        modelAndView.addObject("offer", offer);
-        modelAndView.addObject("offerId", offerId);
-//        modelAndView.addObject("clients", service.findAllClients());
-//        modelAndView.addObject("credits", service.findAllCredits());
-        modelAndView.addObject("clients", bank.getClients());
-        modelAndView.addObject("credits", bank.getCredits());
-        modelAndView.addObject("clientOffer", offer.getClient());
-        modelAndView.addObject("creditOffer", offer.getCredit());
-        return modelAndView;
-    }
-
-    @PostMapping("/{id}/offers")
-    public ModelAndView createOffer(@RequestParam String clientId,
-                                    @RequestParam String creditId,
-                                    @RequestParam Integer creditAmount) {
-        Offer offer = new Offer(null,
-                daoClient.findById(clientId),
-                daoCredit.findById(creditId),
-                creditAmount);
-        daoOffer.save(offer);
-        ModelAndView modelAndView = new ModelAndView("offers");
-        modelAndView.addObject("offers", daoOffer.findAll());
-        return modelAndView;
-    }
-
-    @PostMapping("/{id}/offers/{offerId}")
-    public ModelAndView updateOffer(@PathVariable String id,
-                                    @RequestParam String clientId,
-                                    @RequestParam String creditId,
-                                    @RequestParam Integer creditAmount) {
-        Offer offer = new Offer(id, daoClient.findById(clientId), daoCredit.findById(creditId), creditAmount);
-        daoOffer.save(offer);
-        ModelAndView modelAndView = new ModelAndView("offer");
-        modelAndView.addObject("offer", daoOffer.findById(id));
-        return modelAndView;
-    }
-
-    @PostMapping("/{id}/offers/{offerId}/remove")
-    public ModelAndView deleteOffer(@PathVariable(value = "offerId") String id) {
-        daoOffer.delete(id);
-        return new ModelAndView("redirect:/admin/offers");
-    }
 }

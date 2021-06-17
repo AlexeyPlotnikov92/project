@@ -35,9 +35,9 @@ public class CreditController {
                                      @RequestParam Integer interestRate) {
         Credit credit = new Credit(null, creditLimit, interestRate, null);
         daoCredit.save(credit);
-        ModelAndView modelAndView = new ModelAndView("credits");
-        modelAndView.addObject("credits", daoCredit.findAll());
-        return modelAndView;
+//        ModelAndView modelAndView = new ModelAndView("credits");
+//        modelAndView.addObject("credits", daoCredit.findAll());
+        return new ModelAndView("redirect:/admin/credits");
     }
 
     @PostMapping("/{id}")
@@ -46,9 +46,9 @@ public class CreditController {
                                      @RequestParam Integer interestRate) {
         Credit credit = new Credit(id, creditLimit, interestRate, daoCredit.findById(id).getBankId());
         daoCredit.save(credit);
-        ModelAndView modelAndView = new ModelAndView("credit");
-        modelAndView.addObject("credit", daoCredit.findById(id));
-        return modelAndView;
+//        ModelAndView modelAndView = new ModelAndView("credit");
+//        modelAndView.addObject("credit", daoCredit.findById(id));
+        return new ModelAndView("redirect:/admin/credits");
     }
 
     @PostMapping("/{id}/remove")

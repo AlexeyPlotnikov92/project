@@ -29,13 +29,13 @@ public class DAOOfferImpl implements DAOOffer {
     public List<Offer> findAll() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.query("select o.id, \n" +
-                        "l.id l_id, l.fool_name,\n " +
-                        "l.telephone_number,\n" +
-                        "l.email, l.passport,\n" +
-                        "l.bank_id,\n" +
-                        "r.id r_id, r.credit_limit,\n" +
-                        "r.interest_rate \n" +
-                        "r.bank_id,\n" +
+                        "l.id l_id, l.fool_name, \n " +
+                        "l.telephone_number, \n" +
+                        "l.email, l.passport, \n" +
+                        "l.bank_id, \n" +
+                        "r.id r_id, r.credit_limit, \n" +
+                        "r.interest_rate, \n" +
+                        "r.bank_id ,\n" +
                         "o.credit_amount \n" +
                         "from offers o \n" +
                         "join clients l on o.client_id = l.id \n" +
@@ -47,7 +47,7 @@ public class DAOOfferImpl implements DAOOffer {
                                 resultSet.getString(1),
                                 new Client(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getInt(6), resultSet.getString(7)),
                                 new Credit(resultSet.getString(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(7)),
-                                resultSet.getInt(11)
+                                resultSet.getInt(12)
                         ));
                     }
                     return offers;
@@ -92,21 +92,26 @@ public class DAOOfferImpl implements DAOOffer {
 
     @Override
     public Offer save(Offer offer) {
-        if (offer.getId() == null) {
-            Offer saveOffer = new Offer(
-                    UUID.randomUUID().toString(),
-                    offer.getClient(),
-                    offer.getCredit(),
-                    offer.getCreditAmount());
-            return insertOffer(saveOffer);
-        } else {
-            return updateOffer(offer);
+        if (offer.getCreditAmount()<=offer.getCredit().getCreditLimit()) {
+            if (offer.getId() == null) {
+                Offer saveOffer = new Offer(
+                        UUID.randomUUID().toString(),
+                        offer.getClient(),
+                        offer.getCredit(),
+                        offer.getCreditAmount());
+                return insertOffer(saveOffer);
+            } else {
+                return updateOffer(offer);
+            }
+        }
+        else {
+            throw new IllegalStateException("unexpected credit amount");
         }
     }
 
     private Offer insertOffer(Offer offer) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-        Number number = simpleJdbcInsert.withTableName("offers")
+        simpleJdbcInsert.withTableName("offers")
                 .usingGeneratedKeyColumns()
                 .usingColumns("id", "client_id", "credit_id", "credit_amount")
                 .execute(Map.of(
@@ -115,6 +120,7 @@ public class DAOOfferImpl implements DAOOffer {
                         "credit_id", offer.getCredit().getId(),
                         "credit_amount", offer.getCreditAmount()
                 ));
+        log.info("insert offer");
         return offer;
     }
 
@@ -138,6 +144,10 @@ public class DAOOfferImpl implements DAOOffer {
                         Types.VARCHAR
                 }
         );
+        if (updateCount == 0) {
+            throw new IllegalStateException(String.format("Offer with id %s not found", offer.getId()));
+        }
+
         return offer;
     }
 
@@ -145,7 +155,7 @@ public class DAOOfferImpl implements DAOOffer {
     @Override
     public void delete(String id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        int updateCount = jdbcTemplate.update("delete from offers\n" +
+        int deletedRowCount = jdbcTemplate.update("delete from offers\n" +
                         "where id = ?",
                 new Object[]{
                         id
@@ -154,5 +164,6 @@ public class DAOOfferImpl implements DAOOffer {
                         Types.VARCHAR
                 }
         );
+        log.info("deleted row count {}", deletedRowCount);
     }
 }

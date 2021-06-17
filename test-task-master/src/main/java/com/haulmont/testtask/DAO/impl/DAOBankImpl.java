@@ -43,8 +43,8 @@ public class DAOBankImpl implements DAOBank {
                         banks.add(new Bank(
                                 resultSet.getString(1),
                                 resultSet.getString(2),
-                                daoClient.findClients(resultSet.getString(1)),
-                                daoCredit.findCredits(resultSet.getString(1))
+                                daoClient.findClientsOfBank(resultSet.getString(1)),
+                                daoCredit.findCreditsOfBank(resultSet.getString(1))
                         ));
                     }
                     return banks;
@@ -70,8 +70,8 @@ public class DAOBankImpl implements DAOBank {
                         return new Bank(
                                 resultSet.getString(1),
                                 resultSet.getString(2),
-                                daoClient.findClients(resultSet.getString(1)),
-                                daoCredit.findCredits(resultSet.getString(1))
+                                daoClient.findClientsOfBank(resultSet.getString(1)),
+                                daoCredit.findCreditsOfBank(resultSet.getString(1))
                         );
                     }
                     return null;
@@ -88,21 +88,27 @@ public class DAOBankImpl implements DAOBank {
                     bank.getClients(),
                     bank.getCredits()
             );
-            for (Client client:bank.getClients()) {
+            for (Client client : bank.getClients()) {
                 client.setBankId(bankId);
                 daoClient.save(client);
+                log.info("client in bank {}", client.getBankId());
+                log.info("return client from daobank{}", client.getFoolName());
             }
-            for (Credit credit:bank.getCredits()) {
+            for (Credit credit : bank.getCredits()) {
                 credit.setBankId(bankId);
                 daoCredit.save(credit);
             }
-            return insertBank(saveBank);
+            if (findAll().size() == 0) {
+                return insertBank(saveBank);
+            } else {
+                throw new IllegalArgumentException("extra bank");
+            }
         } else {
-            for (Client client:bank.getClients()) {
+            for (Client client : bank.getClients()) {
                 client.setBankId(bank.getId());
                 daoClient.save(client);
             }
-            for (Credit credit:bank.getCredits()) {
+            for (Credit credit : bank.getCredits()) {
                 credit.setBankId(bank.getId());
                 daoCredit.save(credit);
             }
@@ -112,13 +118,14 @@ public class DAOBankImpl implements DAOBank {
 
     private Bank insertBank(Bank bank) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-        Number number = simpleJdbcInsert.withTableName("banks")
+        simpleJdbcInsert.withTableName("banks")
                 .usingGeneratedKeyColumns()
                 .usingColumns("id", "name")
                 .execute(Map.of(
                         "id", bank.getId(),
                         "name", bank.getName()
                 ));
+        log.info("insert bank");
         return bank;
     }
 
@@ -136,13 +143,16 @@ public class DAOBankImpl implements DAOBank {
                         Types.VARCHAR,
                 }
         );
+        if (updateCount == 0) {
+            throw new IllegalStateException(String.format("Bank with id %s not found", bank.getId()));
+        }
         return bank;
     }
 
     @Override
     public void delete(String id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        int updateCount = jdbcTemplate.update("delete from banks\n" +
+        int deletedRowCount = jdbcTemplate.update("delete from banks\n" +
                         "where id = ?",
                 new Object[]{
                         id
@@ -151,6 +161,7 @@ public class DAOBankImpl implements DAOBank {
                         Types.VARCHAR
                 }
         );
+        log.info("deleted row count {}", deletedRowCount);
     }
 
 

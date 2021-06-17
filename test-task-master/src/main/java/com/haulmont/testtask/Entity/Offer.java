@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 @Data
@@ -32,13 +32,14 @@ public class Offer {
     private List<CreditPayment> loanCalculation(Credit credit, Integer creditAmount) {
         List<CreditPayment> creditPayments = new ArrayList<>();
         int fullSum = creditAmount + creditAmount * credit.getInterestRate() / 100;
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
         for (int i = 0; i < 12; i++) {
             calendar.roll(Calendar.MONTH, +1);
             if (calendar.get(Calendar.MONTH) == Calendar.JANUARY) {
                 calendar.roll(Calendar.YEAR, +1);
             }
-            creditPayments.add(new CreditPayment(calendar.getTime(), fullSum * 1.0 / 12, creditAmount * 1.0 / 12, fullSum * 1.0 / 12 - creditAmount / 12));
+            creditPayments.add(new CreditPayment(dateFormat.format(calendar.getTime()), fullSum * 1.0 / 12, creditAmount * 1.0 / 12, fullSum * 1.0 / 12 - creditAmount / 12));
         }
         return creditPayments;
     }

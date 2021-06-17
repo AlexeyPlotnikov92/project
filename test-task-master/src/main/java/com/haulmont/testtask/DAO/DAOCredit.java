@@ -13,5 +13,7 @@ public interface DAOCredit {
 
     void delete(String id);
 
-    List<Credit> findCredits(String id);
+    List<Credit> findCreditsOfBank(String id);
+
+    List<Credit> findCreditsWithoutBank(String id);
 }

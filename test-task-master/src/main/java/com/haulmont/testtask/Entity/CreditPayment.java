@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreditPayment {
-    private Date paymentDate;
+    private String paymentDate;
     private Double amountPayment;
     private Double repaymentLoanBody;
     private Double interestRepayment;

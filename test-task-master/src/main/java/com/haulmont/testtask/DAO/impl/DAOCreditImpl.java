@@ -90,7 +90,7 @@ public class DAOCreditImpl implements DAOCredit {
 
     private Credit insertCredit(Credit credit) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-        Number number = simpleJdbcInsert.withTableName("credits")
+        simpleJdbcInsert.withTableName("credits")
                 .usingGeneratedKeyColumns()
                 .usingColumns("id", "credit_limit", "interest_rate", "bank_id")
                 .execute(Map.of(
@@ -99,6 +99,7 @@ public class DAOCreditImpl implements DAOCredit {
                         "interest_rate", credit.getInterestRate(),
                         "bank_id", 1
                 ));
+        log.info("insert credit");
         return credit;
     }
 
@@ -122,13 +123,16 @@ public class DAOCreditImpl implements DAOCredit {
                         Types.VARCHAR
                 }
         );
+        if (updateCount == 0) {
+            throw new IllegalStateException(String.format("Credit with id %s not found", credit.getId()));
+        }
         return credit;
     }
 
     @Override
     public void delete(String id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        int updateCount = jdbcTemplate.update("delete from credits\n" +
+        int deletedRowCount = jdbcTemplate.update("delete from credits\n" +
                         "where id = ?",
                 new Object[]{
                         id
@@ -137,10 +141,11 @@ public class DAOCreditImpl implements DAOCredit {
                         Types.VARCHAR
                 }
         );
+        log.info("deleted row count {}", deletedRowCount);
     }
 
     @Override
-    public List<Credit> findCredits(String bankId) {
+    public List<Credit> findCreditsOfBank(String bankId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.query("select id,\n" +
                         " credit_limit,\n" +
@@ -148,6 +153,36 @@ public class DAOCreditImpl implements DAOCredit {
                         " bank_id\n" +
                         "from credits\n " +
                         "where bank_id = ?",
+                new Object[]{
+                        bankId
+                },
+                new int[]{
+                        Types.VARCHAR
+                },
+                resultSet -> {
+                    List<Credit> credits = new ArrayList<>();
+                    while (resultSet.next()) {
+                        credits.add(new Credit(
+                                resultSet.getString(1),
+                                resultSet.getInt(2),
+                                resultSet.getInt(3),
+                                resultSet.getString(4)
+                        ));
+                    }
+                    return credits;
+                }
+        );
+    }
+
+    @Override
+    public List<Credit> findCreditsWithoutBank(String bankId) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query("select id,\n" +
+                        " credit_limit,\n" +
+                        " interest_rate,\n" +
+                        " bank_id\n" +
+                        "from credits\n " +
+                        "where bank_id <> ?",
                 new Object[]{
                         bankId
                 },

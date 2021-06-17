@@ -100,7 +100,7 @@ public class DAOClientImpl implements DAOClient {
 
     private Client insertClient(Client client) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
-        Number number = simpleJdbcInsert.withTableName("clients")
+        simpleJdbcInsert.withTableName("clients")
                 .usingGeneratedKeyColumns()
                 .usingColumns("id", "fool_name", "telephone_number", "email", "passport", "bank_id")
                 .execute(Map.of(
@@ -111,6 +111,7 @@ public class DAOClientImpl implements DAOClient {
                         "passport", client.getPassportNumber(),
                         "client_id", 1
                 ));
+        log.info("inserted client");
         return client;
     }
 
@@ -140,13 +141,16 @@ public class DAOClientImpl implements DAOClient {
                         Types.VARCHAR
                 }
         );
+        if (updateCount == 0) {
+            throw new IllegalStateException(String.format("Client with id %s not found", client.getId()));
+        }
         return client;
     }
 
     @Override
     public void delete(String id) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        int updateCount = jdbcTemplate.update("delete from clients\n" +
+        int deletedRowCount = jdbcTemplate.update("delete from clients\n" +
                         "where id = ?",
                 new Object[]{
                         id
@@ -155,10 +159,12 @@ public class DAOClientImpl implements DAOClient {
                         Types.VARCHAR
                 }
         );
+        log.info("deleted row count {}", deletedRowCount);
     }
 
+
     @Override
-    public List<Client> findClients(String bankId) {
+    public List<Client> findClientsOfBank(String bankId) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         return jdbcTemplate.query("select id,\n" +
                         " fool_name,\n" +
@@ -170,6 +176,41 @@ public class DAOClientImpl implements DAOClient {
                         "where bank_id = ?",
                 new Object[]{
                         bankId
+                },
+                new int[]{
+                        Types.VARCHAR
+                },
+                resultSet -> {
+                    List<Client> clients = new ArrayList<>();
+                    while (resultSet.next()) {
+                        clients.add(new Client(
+                                resultSet.getString(1),
+                                resultSet.getString(2),
+                                resultSet.getString(3),
+                                resultSet.getString(4),
+                                resultSet.getInt(5),
+                                resultSet.getString(6)
+                        ));
+                    }
+                    return clients;
+                }
+        );
+    }
+
+
+    @Override
+    public List<Client> findClientWithoutBank(String id) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        return jdbcTemplate.query("select id,\n" +
+                        " fool_name,\n" +
+                        " telephone_number,\n" +
+                        " email,\n" +
+                        " passport,\n" +
+                        "bank_id \n" +
+                        "from clients\n " +
+                        "where bank_id is null or bank_id <> ?",
+                new Object[]{
+                        id
                 },
                 new int[]{
                         Types.VARCHAR

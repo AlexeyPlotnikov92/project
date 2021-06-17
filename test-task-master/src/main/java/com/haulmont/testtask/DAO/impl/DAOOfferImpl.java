@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.Types;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,19 +37,25 @@ public class DAOOfferImpl implements DAOOffer {
                         "r.id r_id, r.credit_limit, \n" +
                         "r.interest_rate, \n" +
                         "r.bank_id ,\n" +
-                        "o.credit_amount \n" +
+                        "o.credit_amount ,\n" +
+                        "o.date \n" +
                         "from offers o \n" +
                         "join clients l on o.client_id = l.id \n" +
                         "join credits r on o.credit_id = r.id \n",
                 resultSet -> {
                     List<Offer> offers = new ArrayList<>();
                     while (resultSet.next()) {
-                        offers.add(new Offer(
-                                resultSet.getString(1),
-                                new Client(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getInt(6), resultSet.getString(7)),
-                                new Credit(resultSet.getString(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(7)),
-                                resultSet.getInt(12)
-                        ));
+                        try {
+                            offers.add(new Offer(
+                                    resultSet.getString(1),
+                                    new Client(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getInt(6), resultSet.getString(7)),
+                                    new Credit(resultSet.getString(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(7)),
+                                    resultSet.getInt(12),
+                                    resultSet.getString(13)
+                            ));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                     return offers;
                 }
@@ -66,7 +73,8 @@ public class DAOOfferImpl implements DAOOffer {
                         "r.id r_id, r.credit_limit, \n" +
                         "r.interest_rate, \n" +
                         "r.bank_id ,\n" +
-                        "o.credit_amount \n" +
+                        "o.credit_amount, \n" +
+                        "o.date \n" +
                         "from offers o \n" +
                         "join clients l on o.client_id = l.id \n" +
                         "join credits r on o.credit_id = r.id \n" +
@@ -79,32 +87,37 @@ public class DAOOfferImpl implements DAOOffer {
                 },
                 resultSet -> {
                     if (resultSet.next()) {
-                        return new Offer(
-                                resultSet.getString(1),
-                                new Client(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getInt(6), resultSet.getString(7)),
-                                new Credit(resultSet.getString(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(7)),
-                                resultSet.getInt(12)
-                        );
+                        try {
+                            return new Offer(
+                                    resultSet.getString(1),
+                                    new Client(resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getInt(6), resultSet.getString(7)),
+                                    new Credit(resultSet.getString(8), resultSet.getInt(9), resultSet.getInt(10), resultSet.getString(7)),
+                                    resultSet.getInt(12),
+                                    resultSet.getString(13)
+                            );
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                     return null;
                 });
     }
 
     @Override
-    public Offer save(Offer offer) {
-        if (offer.getCreditAmount()<=offer.getCredit().getCreditLimit()) {
+    public Offer save(Offer offer) throws ParseException {
+        if (offer.getCreditAmount() <= offer.getCredit().getCreditLimit()) {
             if (offer.getId() == null) {
                 Offer saveOffer = new Offer(
                         UUID.randomUUID().toString(),
                         offer.getClient(),
                         offer.getCredit(),
-                        offer.getCreditAmount());
+                        offer.getCreditAmount(),
+                        offer.getDate());
                 return insertOffer(saveOffer);
             } else {
                 return updateOffer(offer);
             }
-        }
-        else {
+        } else {
             throw new IllegalStateException("unexpected credit amount");
         }
     }
@@ -113,12 +126,13 @@ public class DAOOfferImpl implements DAOOffer {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(dataSource);
         simpleJdbcInsert.withTableName("offers")
                 .usingGeneratedKeyColumns()
-                .usingColumns("id", "client_id", "credit_id", "credit_amount")
+                .usingColumns("id", "client_id", "credit_id", "credit_amount", "date")
                 .execute(Map.of(
                         "id", offer.getId(),
                         "client_id", offer.getClient().getId(),
                         "credit_id", offer.getCredit().getId(),
-                        "credit_amount", offer.getCreditAmount()
+                        "credit_amount", offer.getCreditAmount(),
+                        "date", offer.getDate()
                 ));
         log.info("insert offer");
         return offer;
@@ -129,13 +143,15 @@ public class DAOOfferImpl implements DAOOffer {
         int updateCount = jdbcTemplate.update("update offers\n" +
                         "set client_id = ?,\n" +
                         "credit_id = ?,\n" +
-                        "credit_amount = ?\n" +
+                        "credit_amount = ?,\n" +
+                        "date = ?\n" +
                         "where id = ?",
                 new Object[]{
                         offer.getClient().getId(),
                         offer.getCredit().getId(),
                         offer.getCreditAmount(),
-                        offer.getId()
+                        offer.getId(),
+                        offer.getDate()
                 },
                 new int[]{
                         Types.VARCHAR,

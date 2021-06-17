@@ -8,10 +8,5 @@ import test.Test;
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-//        Test test = new Test();
-//        if (!test.loadDriver()) return;
-//        if (!test.getConnection()) return;
-//
-//        test.createTable();
     }
 }

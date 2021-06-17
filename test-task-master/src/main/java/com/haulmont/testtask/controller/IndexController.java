@@ -8,11 +8,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class IndexController {
     @GetMapping(value = "/")
     public ModelAndView test() {
-        return new ModelAndView("index");
-    }
-
-    @GetMapping(value = "/admin")
-    public ModelAndView test1() {
         return new ModelAndView("admin");
     }
+//
+//    @GetMapping(value = "/admin")
+//    public ModelAndView test1() {
+//        return new ModelAndView("admin");
+//    }
 }

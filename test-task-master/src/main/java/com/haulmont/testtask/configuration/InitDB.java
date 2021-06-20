@@ -52,6 +52,5 @@ public class InitDB {
                 "  name VARCHAR(50) NOT NULL," +
                 "    PRIMARY KEY (id) " +
                 ");");
-
     }
 }

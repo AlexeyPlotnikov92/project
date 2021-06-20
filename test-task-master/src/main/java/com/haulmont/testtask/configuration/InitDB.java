@@ -44,8 +44,8 @@ public class InitDB {
                 "   PRIMARY KEY (id),\n " +
                 "   CONSTRAINT client_id_fk \n " +
                 "   FOREIGN KEY (client_id)  REFERENCES clients (id), \n" +
-                "   CONSTRAINT credit_id_fk \n"+
-                "   FOREIGN KEY (credit_id)  REFERENCES credits (id)"+
+                "   CONSTRAINT credit_id_fk \n" +
+                "   FOREIGN KEY (credit_id)  REFERENCES credits (id)" +
                 ");");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS banks (\n" +
                 "  id VARCHAR(50) NOT NULL,\n" +

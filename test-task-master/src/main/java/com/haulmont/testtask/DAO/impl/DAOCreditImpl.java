@@ -76,7 +76,7 @@ public class DAOCreditImpl implements DAOCredit {
 
     @Override
     public Credit save(Credit credit) {
-        if (credit.getCreditLimit() < 0 || credit.getInterestRate() < 0) {
+        if (credit.getCreditLimit() > 0 || credit.getInterestRate() >= 0) {
             if (credit.getId() == null) {
                 Credit saveCredit = new Credit(UUID.randomUUID().toString(),
                         credit.getCreditLimit(),

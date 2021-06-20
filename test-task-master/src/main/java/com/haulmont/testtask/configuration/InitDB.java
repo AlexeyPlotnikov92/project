@@ -10,9 +10,6 @@ import javax.sql.DataSource;
 @Slf4j
 @Component
 public class InitDB {
-    public static final String CHECK_TABLE_EXISTS_QUERY = "select schema_name \n" +
-            "   FROM information_schema.schemata \n" +
-            "   WHERE  schema_name = ?";
     private final DataSource dataSource;
 
     public InitDB(DataSource dataSource) {

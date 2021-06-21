@@ -57,11 +57,13 @@
 <form method="post" action="/admin/banks">
     <p> Название банка <input name="name"></p>
     <p>Добавить клиента <select name="clientId">
+        <option value="">Не добавлять клиента</option>
         <option th:each="client : ${clients}"
                 th:text="${client.foolName}"
                 th:value="${client.id}"></option>
     </select>
     <p>Добавить кредит <select name="creditId">
+    <option value="">Не добавлять кредит</option>
         <option th:each="credit : ${credits}"
                 th:value="${credit.id}"
                 th:text="${credit.name}"></option>

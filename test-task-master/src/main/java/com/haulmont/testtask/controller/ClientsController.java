@@ -36,8 +36,6 @@ public class ClientsController {
                                      @RequestParam Integer passportNumber) {
         Client client = new Client(null, foolName, phoneNumber, eMail, passportNumber, null);
         daoClient.save(client);
-//        ModelAndView modelAndView = new ModelAndView("clients");
-//        modelAndView.addObject("clients", daoClient.findAll());
         return new ModelAndView("redirect:/admin/clients");
     }
 
@@ -49,8 +47,6 @@ public class ClientsController {
                                      @RequestParam Integer passportNumber) {
         Client client = new Client(id, foolName, phoneNumber, eMail, passportNumber, daoClient.findById(id).getBankId());
         daoClient.save(client);
-//        ModelAndView modelAndView = new ModelAndView("client");
-//        modelAndView.addObject("client", daoClient.findById(id));
         return new ModelAndView("redirect:/admin/clients");
     }
 

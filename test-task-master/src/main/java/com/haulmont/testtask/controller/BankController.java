@@ -24,7 +24,7 @@ public class BankController {
     private final DAOClient daoClient;
     private final DAOCredit daoCredit;
 
-    public BankController(DAOBank daoBank, DAOClient daoClient, DAOCredit daoCredit, DAOOffer daoOffer) {
+    public BankController(DAOBank daoBank, DAOClient daoClient, DAOCredit daoCredit, DAOOffer daoOffer, DAOOffer daoOffer1) {
         this.daoBank = daoBank;
         this.daoClient = daoClient;
         this.daoCredit = daoCredit;
@@ -91,7 +91,7 @@ public class BankController {
 
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
-        log.info("update bank{}", daoBank.findById(id));
+        log.info("delete bank{}", daoBank.findById(id));
         daoBank.delete(id);
         return new ModelAndView("redirect:/admin/banks");
     }

@@ -42,6 +42,12 @@ class DAOCreditImplTest extends ApplicationTest {
         Assertions.assertEquals(credit.getId(), byId.getId());
         Assertions.assertEquals(updatedCreditLimit, byId.getCreditLimit());
         Assertions.assertEquals(updatedInterestRate, byId.getInterestRate());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            daoCredit.save((new Credit(null,-1,10,"1")));
+        });
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            daoCredit.save((new Credit(null,10,-1,"1")));
+        });
 
         daoCredit.delete(credit.getId());
         Assertions.assertEquals(initialSize, daoCredit.findAll().size());

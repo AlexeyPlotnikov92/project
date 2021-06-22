@@ -10,9 +10,4 @@ public class IndexController {
     public ModelAndView test() {
         return new ModelAndView("admin");
     }
-//
-//    @GetMapping(value = "/admin")
-//    public ModelAndView test1() {
-//        return new ModelAndView("admin");
-//    }
 }

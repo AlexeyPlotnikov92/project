@@ -24,7 +24,7 @@ public class BankController {
     private final DAOClient daoClient;
     private final DAOCredit daoCredit;
 
-    public BankController(DAOBank daoBank, DAOClient daoClient, DAOCredit daoCredit, DAOOffer daoOffer, DAOOffer daoOffer1) {
+    public BankController(DAOBank daoBank, DAOClient daoClient, DAOCredit daoCredit, DAOOffer daoOffer) {
         this.daoBank = daoBank;
         this.daoClient = daoClient;
         this.daoCredit = daoCredit;

@@ -103,6 +103,7 @@ class DAOBankImplTest extends ApplicationTest {
         Bank bank = daoBank.save(new Bank(null, expectedBankName, clients, credits));
         Assertions.assertEquals(daoClient.findAll().size(), daoClient.findClientsOfBank(bank.getId()).size() + daoClient.findClientWithoutBank(bank.getId()).size());
         Assertions.assertEquals(daoCredit.findAll().size(), daoCredit.findCreditsOfBank(bank.getId()).size() + daoCredit.findCreditsWithoutBank(bank.getId()).size());
+        daoBank.delete(bank.getId());
     }
 
 }

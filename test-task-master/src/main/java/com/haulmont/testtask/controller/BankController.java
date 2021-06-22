@@ -54,8 +54,8 @@ public class BankController {
 
     @PostMapping
     public ModelAndView createBank(@RequestParam String name,
-                                   @RequestParam String clientId,
-                                   @RequestParam String creditId) {
+                                   @RequestParam(required = false) String clientId,
+                                   @RequestParam(required = false) String creditId) {
         List<Client> clients = new ArrayList<>();
         if (StringUtils.isNotEmpty(clientId)) {
             clients.add(daoClient.findById(clientId));

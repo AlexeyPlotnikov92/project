@@ -1,13 +1,11 @@
 package com.haulmont.testtask.configuration;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
-@Slf4j
 @Component
 public class InitDB {
     private final DataSource dataSource;

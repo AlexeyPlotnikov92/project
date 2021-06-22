@@ -45,7 +45,9 @@ public class ClientsController {
                                      @RequestParam String phoneNumber,
                                      @RequestParam String eMail,
                                      @RequestParam Integer passportNumber) {
-        Client client = new Client(id, foolName, phoneNumber, eMail, passportNumber, daoClient.findById(id).getBankId());
+        Client client = new Client(id, foolName,
+                phoneNumber, eMail,
+                passportNumber, daoClient.findById(id).getBankId());
         daoClient.save(client);
         return new ModelAndView("redirect:/admin/clients");
     }

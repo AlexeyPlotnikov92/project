@@ -41,37 +41,40 @@ class DAOBankImplTest extends ApplicationTest {
         Credit credit = daoCredit.save(new Credit(null, expectedCreditLimit, expectedInterestRate, "1"));
 
         String expectedBankName = UUID.randomUUID().toString();
-        Bank bank = daoBank.save(new Bank(null, expectedBankName, List.of(client), List.of(credit)));
-        Assertions.assertNotNull(bank.getId());
-        Assertions.assertEquals(expectedBankName, bank.getName());
-        Assertions.assertEquals(client, daoBank.findById(bank.getId()).getClients().get(0));
-        Assertions.assertEquals(credit, daoBank.findById(bank.getId()).getCredits().get(0));
-        Assertions.assertEquals(client.getBankId(), bank.getId());
-        Assertions.assertEquals(credit.getBankId(), bank.getId());
+        Bank bank = new Bank(null, expectedBankName, List.of(client), List.of(credit));
+        try {
+            bank = daoBank.save(bank);
+            Assertions.assertNotNull(bank.getId());
+            Assertions.assertEquals(expectedBankName, bank.getName());
+            Assertions.assertEquals(client, daoBank.findById(bank.getId()).getClients().get(0));
+            Assertions.assertEquals(credit, daoBank.findById(bank.getId()).getCredits().get(0));
+            Assertions.assertEquals(client.getBankId(), bank.getId());
+            Assertions.assertEquals(credit.getBankId(), bank.getId());
 
-        int sizeClients = bank.getClients().size();
-        int sizeCredits = bank.getCredits().size();
-        Client client1 = daoClient.save(new Client(null, expectedFoolName, expectedTelephoneNumber, expectedEMail, expectedPasspotrNumber + 1, "1"));
-        Credit credit1 = daoCredit.save(new Credit(null, expectedCreditLimit, expectedInterestRate, "1"));
-        bank = daoBank.save(new Bank(bank.getId(), expectedBankName, List.of(client, client1), List.of(credit, credit1)));
-        Assertions.assertEquals(sizeClients + 1, daoBank.findById(bank.getId()).getClients().size());
-        Assertions.assertEquals(sizeCredits + 1, daoBank.findById(bank.getId()).getCredits().size());
+            int sizeClients = bank.getClients().size();
+            int sizeCredits = bank.getCredits().size();
+            Client client1 = daoClient.save(new Client(null, expectedFoolName, expectedTelephoneNumber, expectedEMail, expectedPasspotrNumber + 1, "1"));
+            Credit credit1 = daoCredit.save(new Credit(null, expectedCreditLimit, expectedInterestRate, "1"));
+            bank = daoBank.save(new Bank(bank.getId(), expectedBankName, List.of(client, client1), List.of(credit, credit1)));
+            Assertions.assertEquals(sizeClients + 1, daoBank.findById(bank.getId()).getClients().size());
+            Assertions.assertEquals(sizeCredits + 1, daoBank.findById(bank.getId()).getCredits().size());
 
-        Assertions.assertEquals(initialSize + 1, daoBank.findAll().size());
+            Assertions.assertEquals(initialSize + 1, daoBank.findAll().size());
 
-        Bank byId = daoBank.findById(bank.getId());
-        Assertions.assertEquals(expectedBankName, byId.getName());
+            Bank byId = daoBank.findById(bank.getId());
+            Assertions.assertEquals(expectedBankName, byId.getName());
 
-        String updatedBankName = UUID.randomUUID().toString();
-        daoBank.save(new Bank(bank.getId(), updatedBankName, List.of(client, client1), List.of(credit, credit1)));
-        Assertions.assertEquals(initialSize + 1, daoBank.findAll().size());
-        Assertions.assertNotEquals(byId, daoBank.findById(bank.getId()));
+            String updatedBankName = UUID.randomUUID().toString();
+            daoBank.save(new Bank(bank.getId(), updatedBankName, List.of(client, client1), List.of(credit, credit1)));
+            Assertions.assertEquals(initialSize + 1, daoBank.findAll().size());
+            Assertions.assertNotEquals(byId, daoBank.findById(bank.getId()));
 
-        byId = daoBank.findById(bank.getId());
-        Assertions.assertEquals(bank.getId(), byId.getId());
-        Assertions.assertEquals(updatedBankName, byId.getName());
-
-        daoBank.delete(bank.getId());
+            byId = daoBank.findById(bank.getId());
+            Assertions.assertEquals(bank.getId(), byId.getId());
+            Assertions.assertEquals(updatedBankName, byId.getName());
+        } finally {
+            daoBank.delete(bank.getId());
+        }
         Assertions.assertEquals(initialSize, daoBank.findAll().size());
     }
 
@@ -99,9 +102,13 @@ class DAOBankImplTest extends ApplicationTest {
             credits.add(daoCredit.findAll().get(i));
         }
         String expectedBankName = UUID.randomUUID().toString();
-        Bank bank = daoBank.save(new Bank(null, expectedBankName, clients, credits));
-        Assertions.assertEquals(daoClient.findAll().size(), daoClient.findClientsOfBank(bank.getId()).size() + daoClient.findClientWithoutBank(bank.getId()).size());
-        Assertions.assertEquals(daoCredit.findAll().size(), daoCredit.findCreditsOfBank(bank.getId()).size() + daoCredit.findCreditsWithoutBank(bank.getId()).size());
-        daoBank.delete(bank.getId());
+        Bank bank = new Bank(null, expectedBankName, clients, credits);
+        try {
+            bank = daoBank.save(bank);
+            Assertions.assertEquals(daoClient.findAll().size(), daoClient.findClientsOfBank(bank.getId()).size() + daoClient.findClientWithoutBank(bank.getId()).size());
+            Assertions.assertEquals(daoCredit.findAll().size(), daoCredit.findCreditsOfBank(bank.getId()).size() + daoCredit.findCreditsWithoutBank(bank.getId()).size());
+        } finally {
+            daoBank.delete(bank.getId());
+        }
     }
 }

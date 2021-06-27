@@ -45,8 +45,8 @@ public class OfferController {
         modelAndView.addObject("offerId", id);
         modelAndView.addObject("clients", bank.getClients());
         modelAndView.addObject("credits", bank.getCredits());
-        modelAndView.addObject("clientOffer", offer.getClient());
-        modelAndView.addObject("creditOffer", offer.getCredit());
+        modelAndView.addObject("clientOffer", offer.getClient().getId());
+        modelAndView.addObject("creditOffer", offer.getCredit().getId());
         return modelAndView;
     }
 

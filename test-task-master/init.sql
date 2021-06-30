@@ -1,23 +1,4 @@
-package com.haulmont.testtask.configuration;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
-
-@Component
-public class InitDB {
-    private final DataSource dataSource;
-
-
-    public InitDB(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-
-
-    @PostConstruct
-    public void init() {
+ public void init() {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clients (\n" +
                 "   id VARCHAR(50) NOT NULL, \n" +
@@ -51,5 +32,4 @@ public class InitDB {
                 "  name VARCHAR(50) NOT NULL," +
                 "    PRIMARY KEY (id) " +
                 ");");
-    }
-}
+ }

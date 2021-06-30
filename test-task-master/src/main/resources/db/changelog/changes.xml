@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="clients" author="johndoe">
+        <createTable tableName="clients">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" primaryKeyName="client_pk" nullable="false"/>
+            </column>
+            <column name="fool_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="telephone_number" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="passport" type="BIGINT">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="bank_id" type="VARCHAR(50)">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="credits" author="johndoe">
+        <createTable tableName="credits">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" primaryKeyName="credit_pk" nullable="false"/>
+            </column>
+            <column name="credit_limit" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="interest_rate" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_id" type="VARCHAR(50)">
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="banks" author="johndoe">
+        <createTable tableName="banks">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" primaryKeyName="bank_pk" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="offers" author="johndoe">
+        <createTable tableName="offers">
+            <column name="id" type="VARCHAR(50)">
+                <constraints primaryKey="true" primaryKeyName="offer_pk" nullable="false"/>
+            </column>
+            <column name="client_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credit_amount" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="ref" author="johndoe">
+        <addForeignKeyConstraint baseTableName="offers" baseColumnNames="client_id" constraintName="client_id_fk"
+                                 referencedTableName="clients"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="offers" baseColumnNames="credit_id" constraintName="credit_id_fk"
+                                 referencedTableName="credits"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

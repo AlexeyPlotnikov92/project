@@ -35,7 +35,7 @@
         <div class="row">
             <div class="d-flex flex-column bd-highlight mb-3">
                 <a class="btn btn-primary btn-sm" href="/" type="button"> Начальная страница </a>
-                <a class="btn btn-primary btn-sm" href="/admin/credits" type="button"> Вернутся к банкам </a>
+                <a class="btn btn-primary btn-sm" href="/admin/credits" type="button"> Вернутся к банку </a>
                 <a class="btn btn-primary btn-sm" href="/admin/offers" type="button"> Перейти к созданию кредитного предложения </a>
             </div>
         </div>
@@ -43,10 +43,10 @@
 </div>
 <H5>Данные о Банке</H5>
 <p>Список клиентов
-    <option th:each="client : ${bankClients}"
+    <option th:each="client : ${bank.clients}"
             th:text="${client.foolName}"></option>
 <p>Список кредитов
-    <option th:each="credit : ${bankCredits}"
+    <option th:each="credit : ${bank.credits}"
             th:text="${credit.name}"></option>
 <hr>
 <h5>Изменить название или добавить клиентов/кредиты</h5>

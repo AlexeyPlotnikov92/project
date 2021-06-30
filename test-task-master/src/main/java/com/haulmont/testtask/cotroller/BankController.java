@@ -45,8 +45,6 @@ public class BankController {
         Bank bank = daoBank.findById(id);
         modelAndView.addObject("bank", bank);
         modelAndView.addObject("credits", daoCredit.findCreditsWithoutBank(id));
-        modelAndView.addObject("bankClients", bank.getClients());
-        modelAndView.addObject("bankCredits", bank.getCredits());
         modelAndView.addObject("clients", daoClient.findClientWithoutBank(id));
         return modelAndView;
     }

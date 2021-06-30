@@ -1,6 +1,4 @@
- public void init() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clients (\n" +
+       jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS clients (\n" +
                 "   id VARCHAR(50) NOT NULL, \n" +
                 "   fool_name VARCHAR(50) NOT NULL,\n" +
                 "   telephone_number VARCHAR(50) NOT NULL,\n" +

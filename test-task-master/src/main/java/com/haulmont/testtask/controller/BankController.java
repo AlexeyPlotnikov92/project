@@ -1,4 +1,4 @@
-package com.haulmont.testtask.cotroller;
+package com.haulmont.testtask.controller;
 
 import com.haulmont.testtask.DAO.DAOBank;
 import com.haulmont.testtask.DAO.DAOClient;

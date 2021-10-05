@@ -2,6 +2,7 @@ package com.haulmont.testtask.controller;
 
 import com.haulmont.testtask.DAO.DAOCredit;
 import com.haulmont.testtask.entity.Credit;
+import com.haulmont.testtask.exception.EntityNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -42,7 +43,8 @@ public class CreditController {
     public ModelAndView updateCredit(@PathVariable String id,
                                      @RequestParam Integer creditLimit,
                                      @RequestParam Integer interestRate) {
-        Credit credit = new Credit(id, creditLimit, interestRate, daoCredit.findById(id).getBankId());
+        Credit credit = new Credit(id, creditLimit, interestRate, daoCredit.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", id))).getBankId());
         daoCredit.save(credit);
         return new ModelAndView("redirect:/admin/credits");
     }

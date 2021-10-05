@@ -42,6 +42,7 @@
 </div>
 <hr>
 <H4>Создать кредитное предложение</H4>
+<br />
 <form method="post" action="/admin/offers">
     <p>Клиент <select name="clientId">
         <option th:each="client : ${clients}"
@@ -58,6 +59,7 @@
 </form>
 <div class="col-sm-8">
     <h4>Список кредитных предложений:</h4>
+    <br />
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col-sm-4" th:each="offer: ${offers}">
             <div class="card">

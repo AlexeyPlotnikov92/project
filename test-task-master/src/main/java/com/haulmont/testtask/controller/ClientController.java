@@ -2,6 +2,7 @@ package com.haulmont.testtask.controller;
 
 import com.haulmont.testtask.DAO.DAOClient;
 import com.haulmont.testtask.entity.Client;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,8 +36,10 @@ public class ClientController {
                                      @RequestParam String phoneNumber,
                                      @RequestParam String eMail,
                                      @RequestParam Integer passportNumber) {
-        Client client = new Client(null, foolName, phoneNumber, eMail, passportNumber, null);
-        daoClient.save(client);
+        if (StringUtils.isNotEmpty(foolName)) {
+            Client client = new Client(null, foolName, phoneNumber, eMail, passportNumber, null);
+            daoClient.save(client);
+        }
         return new ModelAndView("redirect:/admin/clients");
     }
 
@@ -46,8 +49,11 @@ public class ClientController {
                                      @RequestParam String phoneNumber,
                                      @RequestParam String eMail,
                                      @RequestParam Integer passportNumber) {
-        Client client = new Client(id, foolName, phoneNumber, eMail, passportNumber, daoClient.findById(id).getBankId());
-        daoClient.save(client);
+        if (StringUtils.isNotEmpty(foolName)) {
+//            Client client = new Client(id, foolName, phoneNumber, eMail, passportNumber, daoClient.findById(id).getBankId());
+            Client client = new Client(id, foolName, phoneNumber, eMail, passportNumber, null);
+            daoClient.save(client);
+        }
         return new ModelAndView("redirect:/admin/clients");
     }
 

@@ -6,6 +6,7 @@ import com.haulmont.testtask.DAO.DAOCredit;
 import com.haulmont.testtask.DAO.DAOOffer;
 import com.haulmont.testtask.entity.Bank;
 import com.haulmont.testtask.entity.Offer;
+import com.haulmont.testtask.exception.EntityNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,7 +39,8 @@ public class OfferController {
 
     @GetMapping("/{id}")
     public ModelAndView getOfferById(@PathVariable String id) {
-        Offer offer = daoOffer.findById(id);
+        Offer offer = daoOffer.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", id)));
         ModelAndView modelAndView = new ModelAndView("offer");
         Bank bank = daoBank.findAll().get(0);
         modelAndView.addObject("offer", offer);
@@ -55,8 +57,10 @@ public class OfferController {
                                     @RequestParam String creditId,
                                     @RequestParam Integer creditAmount) {
         Offer offer = new Offer(null,
-                daoClient.findById(clientId),
-                daoCredit.findById(creditId),
+                daoClient.findById(clientId).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                        "%d не найден", clientId))),
+                daoCredit.findById(creditId).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                        "%d не найден", creditId))),
                 creditAmount);
         daoOffer.save(offer);
         return new ModelAndView("redirect:/admin/offers");
@@ -67,7 +71,9 @@ public class OfferController {
                                     @RequestParam String clientId,
                                     @RequestParam String creditId,
                                     @RequestParam Integer creditAmount) {
-        Offer offer = new Offer(id, daoClient.findById(clientId), daoCredit.findById(creditId), creditAmount);
+        Offer offer = new Offer(id, daoClient.findById(clientId).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", clientId))), daoCredit.findById(creditId).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", creditId))), creditAmount);
         daoOffer.save(offer);
         return new ModelAndView("redirect:/admin/offers");
     }

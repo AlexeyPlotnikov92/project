@@ -31,7 +31,7 @@ class DAOClientImplTest extends ApplicationTest {
 
         Assertions.assertEquals(initialSize + 1, daoClient.findAll().size());
 
-        Client byId = daoClient.findById(client.getId());
+        Client byId = daoClient.findById(client.getId()).orElse(null);
         Assertions.assertEquals(client.getId(), byId.getId());
         Assertions.assertEquals(expectedFoolName, byId.getFoolName());
         Assertions.assertEquals(expectedTelephoneNumber, byId.getTelephoneNumber());
@@ -46,7 +46,7 @@ class DAOClientImplTest extends ApplicationTest {
         Assertions.assertEquals(initialSize + 1, daoClient.findAll().size());
         Assertions.assertNotEquals(byId, daoClient.findById(client.getId()));
 
-        byId = daoClient.findById(client.getId());
+        byId = daoClient.findById(client.getId()).orElse(null);
         Assertions.assertEquals(client.getId(), byId.getId());
         Assertions.assertEquals(updatedFoolName, byId.getFoolName());
         Assertions.assertEquals(updatedTelephoneNumber, byId.getTelephoneNumber());

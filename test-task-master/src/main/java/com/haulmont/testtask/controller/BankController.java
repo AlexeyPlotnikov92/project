@@ -6,6 +6,7 @@ import com.haulmont.testtask.DAO.DAOCredit;
 import com.haulmont.testtask.entity.Bank;
 import com.haulmont.testtask.entity.Client;
 import com.haulmont.testtask.entity.Credit;
+import com.haulmont.testtask.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -42,10 +43,12 @@ public class BankController {
     @GetMapping("/{id}")
     public ModelAndView getBankById(@PathVariable String id) {
         ModelAndView modelAndView = new ModelAndView("bank");
-        Bank bank = daoBank.findById(id);
+        Bank bank = daoBank.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", id)));
         modelAndView.addObject("bank", bank);
-        modelAndView.addObject("credits", daoCredit.findCreditsWithoutBank(id));
-        modelAndView.addObject("clients", daoClient.findClientWithoutBank(id));
+//        modelAndView.addObject("credits", daoCredit.findCreditsWithoutBank(id));
+//        modelAndView.addObject("clients", daoClient.findClientWithoutBank(id));
+        modelAndView.addObject("clients", daoClient.findAll());
         return modelAndView;
     }
 
@@ -55,15 +58,18 @@ public class BankController {
                                    @RequestParam(required = false) String creditId) {
         List<Client> clients = new ArrayList<>();
         if (StringUtils.isNotEmpty(clientId)) {
-            clients.add(daoClient.findById(clientId));
+            clients.add(daoClient.findById(clientId).orElse(null));
         }
         List<Credit> credits = new ArrayList<>();
         if (StringUtils.isNotEmpty(creditId)) {
-            credits.add(daoCredit.findById(creditId));
+            credits.add(daoCredit.findById(creditId).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                    "%d не найден", creditId))));
         }
-        Bank bank = new Bank(null, name, clients, credits);
-        Bank saveBank = daoBank.save(bank);
-        log.info("create bank {}", saveBank.getId());
+        if (StringUtils.isNotEmpty(name)) {
+            Bank bank = new Bank(null, name, clients, credits);
+            Bank saveBank = daoBank.save(bank);
+            log.info("create bank {}", saveBank.getId());
+        }
         return new ModelAndView("redirect:/admin/banks");
     }
 
@@ -72,13 +78,16 @@ public class BankController {
                                    @RequestParam String name,
                                    @RequestParam(required = false) String clientId,
                                    @RequestParam(required = false) String creditId) {
-        List<Client> clients = daoBank.findById(id).getClients();
+        List<Client> clients = daoBank.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", id))).getClients();
         if (StringUtils.isNotEmpty(clientId)) {
-            clients.add(daoClient.findById(clientId));
+            clients.add(daoClient.findById(clientId).orElse(null));
         }
-        List<Credit> credits = daoBank.findById(id).getCredits();
+        List<Credit> credits = daoBank.findById(id).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                "%d не найден", id))).getCredits();
         if (StringUtils.isNotEmpty(creditId)) {
-            credits.add(daoCredit.findById(creditId));
+            credits.add(daoCredit.findById(creditId).orElseThrow(()-> new EntityNotFoundException(String.format("Жанр с Id = " +
+                    "%d не найден", id))));
         }
         Bank bank = new Bank(id, name, clients, credits);
         daoBank.save(bank);

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,10 +13,17 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "offers")
 public class Offer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+    @Column(name = "client_id")
     private Client client;
+    @Column(name = "credit_id")
     private Credit credit;
+    @Column(name = "credit_amoutn")
     private Integer creditAmount;
     private List<CreditPayment> creditPayments;
     private String name;

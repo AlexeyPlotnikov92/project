@@ -29,8 +29,14 @@ public class OfferController {
 
     @GetMapping
     public ModelAndView getOffers() {
+        Bank bank;
+        if (daoBank.findAll().size()<1) {
+            throw new IllegalArgumentException("bank not created");
+        }
+        else {
+            bank = daoBank.findAll().get(0);
+        }
         ModelAndView modelAndView = new ModelAndView("offers");
-        Bank bank = daoBank.findAll().get(0);
         modelAndView.addObject("offers", daoOffer.findAll());
         modelAndView.addObject("clients", bank.getClients());
         modelAndView.addObject("credits", bank.getCredits());
@@ -80,7 +86,7 @@ public class OfferController {
 
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
-        daoOffer.delete(id);
+        daoOffer.deleteById(id);
         return new ModelAndView("redirect:/admin/offers");
     }
 }

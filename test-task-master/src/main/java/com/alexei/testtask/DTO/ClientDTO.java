@@ -1,0 +1,25 @@
+package com.alexei.testtask.DTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClientDTO {
+
+    private UUID id;
+
+    private String foolName;
+
+    private String phoneNumber;
+
+    private String eMail;
+
+    private Integer passport;
+
+    private UUID bankId;
+}

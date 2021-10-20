@@ -53,7 +53,7 @@
         <option value="">Не добавлять кредит</option>
         <option th:each="credit : ${credits}"
                 th:value="${credit.id}"
-                th:text="${credit.name}"></option>
+                th:text="${credit.toStringCredit}"></option>
     </select>
         <button name="submit">Добавить</button>
 </form>

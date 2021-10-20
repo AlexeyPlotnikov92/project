@@ -26,6 +26,7 @@
         }
       }
 
+
     </style>
 
 </head>
@@ -47,17 +48,54 @@
     <button name="submit">Добавить</button>
 </form>
 <hr>
-<div class="col-sm-8">
-    <h4>Список кредитов:</h4>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col-sm-4" th:each="credit: ${credits}">
-            <div class="card">
-                <div class="card-body">
-                    <h6 class="card-title"><p th:text="${credit.name}"></h6>
-                    <p class="card-text" th:text="${'Лимит кредита: '+credit.creditLimit}"></p>
-                    <p class="card-text" th:text="${'Процентная ставка: '+credit.interestRate}"></p>
-                    <a class="btn btn-primary btn-sm" th:href="${'/admin/credits/'+credit.id}"
-                       type="button">Перейти на страницу кредита</a>
+<div class="row">
+    <div class="row align-items-start">
+        <div class="col-sm-2">
+            <nav class="navbar navbar-light bg-light">
+                <div class="container row align-items-start">
+                    <form>
+                        <div class="row">
+                            <p>Сортировка:</p>
+                        </div>
+                        <div class="row">
+                            <select name="order" onchange="this.form.submit()">
+                                <option value="">Без сортировки</option>
+                                <option th:each="sort:${sorting}"
+                                        th:selected="${sort.column == selectedSorting.column}"
+                                        th:text="${sort.displayName}"
+                                        th:value="${sort.column}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <select name="dir" onchange="this.form.submit()">
+                                <option th:selected="${'ASC' == (selectedSorting==null?'ASC':selectedSorting.direction.name)}"
+                                        value="ASC">
+                                    По возрастанию
+                                </option>
+                                <option th:selected="${'DESC' == (selectedSorting==null?'DESC':selectedSorting.direction.name)}"
+                                        value="DESC">
+                                    По убыванию
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </nav>
+        </div>
+        <div class="col-sm-8">
+            <h4>Список кредитов:</h4>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col-sm-4" th:each="credit: ${credits}">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title"><p th:text="${credit.toStringCredit}"></h6>
+                            <p class="card-text" th:text="${'Лимит кредита: '+credit.creditLimit}"></p>
+                            <p class="card-text" th:text="${'Процентная ставка: '+credit.interestRate}"></p>
+                            <a class="btn btn-primary btn-sm" th:href="${'/admin/credits/'+credit.id}"
+                               type="button">Перейти на страницу кредита</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

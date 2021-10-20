@@ -52,7 +52,7 @@
     <p>Кредит <select name="creditId">
         <option th:each="credit : ${credits}"
                 th:value="${credit.id}"
-                th:text="${credit.name}"></option>
+                th:text="${credit.toStringCredit}"></option>
     </select>
     <p>Сумма кредита <input name="creditAmount">
         <button name="submit">Submit</button>
@@ -64,9 +64,9 @@
         <div class="col-sm-4" th:each="offer: ${offers}">
             <div class="card">
                 <div class="card-body">
-                    <h6 class="card-title"><p th:text="${offer.name}"></h6>
+                    <h6 class="card-title"><p th:text="${offer.toStringOffer}"></h6>
                     <p class="card-text" th:text="${'Клиент: '+offer.client.foolName}"></p>
-                    <p class="card-text" th:text="${'Кредит: '+offer.credit.name}"></p>
+                    <p class="card-text" th:text="${'Кредит: '+offer.credit.toStringCredit}"></p>
                     <p class="card-text" th:text="${'Сумма кредита: '+offer.creditAmount}"></p>
                     <a class="btn btn-primary btn-sm" th:href="${'/admin/offers/'+offer.id}"
                        type="button">Перейти на страницу кредитного предложения</a>

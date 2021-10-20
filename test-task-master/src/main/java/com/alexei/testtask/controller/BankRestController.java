@@ -1,0 +1,99 @@
+package com.alexei.testtask.controller;
+
+import com.alexei.testtask.DTO.AskDto;
+import com.alexei.testtask.DTO.BankDTO;
+import com.alexei.testtask.entity.Bank;
+import com.alexei.testtask.entity.Client;
+import com.alexei.testtask.entity.Credit;
+import com.alexei.testtask.factories.BankDtoFactory;
+import com.alexei.testtask.service.BankService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+@Slf4j
+@Transactional
+@RestController
+public class BankRestController {
+
+    public static final String FETCH_BANKS = "/api/v1/banks";
+    public static final String CREATE_BANKS = "/api/v1/banks";
+    public static final String EDIT_BANKS = "/api/v1/banks/{id}";
+    public static final String DELETE_BANKS = "/api/v1/banks/{id}";
+    private final BankDtoFactory bankDtoFactory;
+    private final BankService bankService;
+
+    public BankRestController(BankDtoFactory bankDtoFactory, BankService bankService) {
+        this.bankDtoFactory = bankDtoFactory;
+        this.bankService = bankService;
+    }
+
+    @GetMapping(FETCH_BANKS)
+    public List<BankDTO> getBanks() {
+        List<Bank> banksEntity = bankService.findAllBanks();
+        List<BankDTO> banks = new ArrayList<>();
+        for (Bank bank : banksEntity) {
+            banks.add(bankDtoFactory.makeBankDto(bank));
+        }
+        return banks;
+    }
+
+    @PostMapping(CREATE_BANKS)
+    public BankDTO createBank(@RequestParam String name,
+                              @RequestParam(required = false) String clientId,
+                              @RequestParam(required = false) String creditId) {
+        List<Client> clients = new ArrayList<>();
+        if (StringUtils.isNotEmpty(clientId)) {
+            clients.add(bankService.findClientById(UUID.fromString(clientId)));
+        }
+        List<Credit> credits = new ArrayList<>();
+        if (StringUtils.isNotEmpty(creditId)) {
+            credits.add(bankService.findCreditById(UUID.fromString(creditId)));
+        }
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("bank have not name");
+        }
+        Bank bank = new Bank(null, name, clients, credits);
+        bank = bankService.saveBank(bank);
+        log.info("create bank {}", bank.getId());
+        log.info("clients {}", bank.getClients());
+        log.info("credits {}", bank.getCredits());
+        return bankDtoFactory.makeBankDto(bank);
+    }
+
+    @PatchMapping(EDIT_BANKS)
+    public BankDTO updateBank(@PathVariable String id,
+                              @RequestParam String name,
+                              @RequestParam(required = false) String clientId,
+                              @RequestParam(required = false) String creditId) {
+        List<Client> clients = new ArrayList<>();
+        if (StringUtils.isNotEmpty(clientId)) {
+            clients.add(bankService.findClientById(UUID.fromString(clientId)));
+        }
+        List<Credit> credits = new ArrayList<>();
+        if (StringUtils.isNotEmpty(creditId)) {
+            credits.add(bankService.findCreditById(UUID.fromString(creditId)));
+        }
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("bank have not name");
+        }
+        Bank bank = new Bank(null, name, clients, credits);
+        bank = bankService.saveBank(bank);
+        log.info("create bank {}", bank.getId());
+        log.info("clients {}", bank.getClients());
+        log.info("credits {}", bank.getCredits());
+        return bankDtoFactory.makeBankDto(bank);
+    }
+
+    @DeleteMapping(DELETE_BANKS)
+    public AskDto deleteOffer(@PathVariable String id) {
+        bankService.deleteBankById(UUID.fromString(id));
+        return AskDto.makeAnswer(true);
+    }
+
+}

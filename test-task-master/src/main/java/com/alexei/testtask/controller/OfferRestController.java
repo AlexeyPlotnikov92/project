@@ -1,10 +1,8 @@
 package com.alexei.testtask.controller;
 
 import com.alexei.testtask.DTO.AskDto;
-import com.alexei.testtask.DTO.CreditDTO;
-import com.alexei.testtask.DTO.OfferDTO;
+import com.alexei.testtask.DTO.OfferDto;
 import com.alexei.testtask.entity.Bank;
-import com.alexei.testtask.entity.Credit;
 import com.alexei.testtask.entity.Offer;
 import com.alexei.testtask.factories.OfferDtoFactory;
 import com.alexei.testtask.service.BankService;
@@ -20,7 +18,7 @@ import java.util.UUID;
 @RestController
 public class OfferRestController {
 
-    public static final String FETCH_OFFERS = "/api/v1/offers";
+    public static final String GET_OFFERS = "/api/v1/offers";
     public static final String CREATE_OFFERS = "/api/v1/offers";
     public static final String EDIT_OFFERS = "/api/v1/offers/{id}";
     public static final String DELETE_OFFERS = "/api/v1/offers/{id}";
@@ -32,8 +30,8 @@ public class OfferRestController {
         this.bankService = bankService;
     }
 
-    @GetMapping(FETCH_OFFERS)
-    public List<OfferDTO> getOffers() {
+    @GetMapping(GET_OFFERS)
+    public List<OfferDto> getOffers() {
         Bank bank;
         if (bankService.findAllBanks().size() < 1) {
             throw new IllegalArgumentException("bank not created");
@@ -41,7 +39,7 @@ public class OfferRestController {
             bank = bankService.findOnlyBank();
         }
         List<Offer> offersEntity = bankService.findAllOffer();
-        List<OfferDTO> offers = new ArrayList<>();
+        List<OfferDto> offers = new ArrayList<>();
         for (Offer offer : offersEntity) {
             offers.add(offerDtoFactory.makeOfferDto(offer));
         }
@@ -49,9 +47,9 @@ public class OfferRestController {
     }
 
     @PostMapping(CREATE_OFFERS)
-    public OfferDTO createOffer(@RequestParam String clientId,
-                                 @RequestParam String creditId,
-                                 @RequestParam Integer creditAmount) {
+    public OfferDto createOffer(@RequestParam String clientId,
+                                @RequestParam String creditId,
+                                @RequestParam Integer creditAmount) {
         if (StringUtils.isEmpty(clientId) || StringUtils.isEmpty(creditId)) {
            throw new IllegalArgumentException("offer have not client or credit");
         }
@@ -64,10 +62,10 @@ public class OfferRestController {
     }
 
     @PatchMapping(EDIT_OFFERS)
-    public OfferDTO updateOffer(@PathVariable String id,
-                                  @RequestParam String clientId,
-                                  @RequestParam String creditId,
-                                  @RequestParam Integer creditAmount) {
+    public OfferDto updateOffer(@PathVariable String id,
+                                @RequestParam String clientId,
+                                @RequestParam String creditId,
+                                @RequestParam Integer creditAmount) {
         Offer offer = new Offer(UUID.fromString(id),
                 bankService.findClientById(UUID.fromString(clientId)),
                 bankService.findCreditById(UUID.fromString(creditId)),

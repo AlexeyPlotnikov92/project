@@ -1,7 +1,7 @@
 package com.alexei.testtask.controller;
 
 import com.alexei.testtask.DTO.AskDto;
-import com.alexei.testtask.DTO.BankDTO;
+import com.alexei.testtask.DTO.BankDto;
 import com.alexei.testtask.entity.Bank;
 import com.alexei.testtask.entity.Client;
 import com.alexei.testtask.entity.Credit;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 public class BankRestController {
 
-    public static final String FETCH_BANKS = "/api/v1/banks";
+    public static final String GET_BANKS = "/api/v1/banks";
     public static final String CREATE_BANKS = "/api/v1/banks";
     public static final String EDIT_BANKS = "/api/v1/banks/{id}";
     public static final String DELETE_BANKS = "/api/v1/banks/{id}";
@@ -33,10 +33,10 @@ public class BankRestController {
         this.bankService = bankService;
     }
 
-    @GetMapping(FETCH_BANKS)
-    public List<BankDTO> getBanks() {
+    @GetMapping(GET_BANKS)
+    public List<BankDto> getBanks() {
         List<Bank> banksEntity = bankService.findAllBanks();
-        List<BankDTO> banks = new ArrayList<>();
+        List<BankDto> banks = new ArrayList<>();
         for (Bank bank : banksEntity) {
             banks.add(bankDtoFactory.makeBankDto(bank));
         }
@@ -44,7 +44,7 @@ public class BankRestController {
     }
 
     @PostMapping(CREATE_BANKS)
-    public BankDTO createBank(@RequestParam String name,
+    public BankDto createBank(@RequestParam String name,
                               @RequestParam(required = false) String clientId,
                               @RequestParam(required = false) String creditId) {
         List<Client> clients = new ArrayList<>();
@@ -67,7 +67,7 @@ public class BankRestController {
     }
 
     @PatchMapping(EDIT_BANKS)
-    public BankDTO updateBank(@PathVariable String id,
+    public BankDto updateBank(@PathVariable String id,
                               @RequestParam String name,
                               @RequestParam(required = false) String clientId,
                               @RequestParam(required = false) String creditId) {

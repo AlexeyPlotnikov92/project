@@ -1,7 +1,7 @@
 package com.alexei.testtask.controller;
 
 import com.alexei.testtask.DTO.AskDto;
-import com.alexei.testtask.DTO.CreditDTO;
+import com.alexei.testtask.DTO.CreditDto;
 import com.alexei.testtask.entity.Credit;
 import com.alexei.testtask.factories.CreditDtoFactory;
 import com.alexei.testtask.service.BankService;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Transactional
 @RestController
 public class CreditRestController {
-    public static final String FETCH_CREDITS = "/api/v1/credits";
+    public static final String GET_CREDITS = "/api/v1/credits";
     public static final String CREATE_CREDITS = "/api/v1/credits";
     public static final String EDIT_CREDITS = "/api/v1/credits/{id}";
     public static final String DELETE_CREDITS = "/api/v1/credits/{id}";
@@ -29,15 +29,15 @@ public class CreditRestController {
         this.bankService = bankService;
     }
 
-    @GetMapping(FETCH_CREDITS)
-    public List<CreditDTO> getCredits(
+    @GetMapping(GET_CREDITS)
+    public List<CreditDto> getCredits(
             @RequestParam(value = "order", required = false) String order,
             @RequestParam(value = "dir", required = false) String direction
     ) {
         List<CreditSorting> sortingProperties = bankService.getSortingCreditsProperties();
         CreditSorting selectedSorting = getSelectedSorting(sortingProperties, order, direction);
         List<Credit> creditsEntity = bankService.findAllCredits(selectedSorting);
-        List<CreditDTO> credits = new ArrayList<>();
+        List<CreditDto> credits = new ArrayList<>();
         for (Credit credit : creditsEntity) {
             credits.add(creditDtoFactory.makeCreditDto(credit));
         }
@@ -45,7 +45,7 @@ public class CreditRestController {
     }
 
     @PostMapping(CREATE_CREDITS)
-    public CreditDTO createCredit(@RequestParam Integer creditLimit,
+    public CreditDto createCredit(@RequestParam Integer creditLimit,
                                   @RequestParam Integer interestRate) {
         Credit credit = new Credit(null, creditLimit, interestRate, null);
         bankService.saveCredit(credit);
@@ -53,7 +53,7 @@ public class CreditRestController {
     }
 
     @PatchMapping(EDIT_CREDITS)
-    public CreditDTO updateCredit(@PathVariable String id,
+    public CreditDto updateCredit(@PathVariable String id,
                                   @RequestParam Integer creditLimit,
                                   @RequestParam Integer interestRate) {
         Credit credit = new Credit(UUID.fromString(id), creditLimit, interestRate,

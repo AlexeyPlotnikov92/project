@@ -13,13 +13,13 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OfferDTO {
+public class OfferDto {
 
     private UUID id;
 
-    private Client client;
+    private ClientDto client;
 
-    private Credit credit;
+    private CreditDto credit;
 
     private Integer creditAmount;
 

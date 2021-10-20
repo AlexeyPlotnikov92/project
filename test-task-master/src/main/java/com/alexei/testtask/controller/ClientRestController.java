@@ -1,7 +1,7 @@
 package com.alexei.testtask.controller;
 
 import com.alexei.testtask.DTO.AskDto;
-import com.alexei.testtask.DTO.ClientDTO;
+import com.alexei.testtask.DTO.ClientDto;
 import com.alexei.testtask.entity.Client;
 import com.alexei.testtask.factories.ClientDtoFactory;
 import com.alexei.testtask.service.BankService;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @RestController
 public class ClientRestController {
 
-    public static final String FETCH_CLIENTS = "/api/v1/clients";
+    public static final String GET_CLIENTS = "/api/v1/clients";
     public static final String CREATE_CLIENTS = "/api/v1/clients";
     public static final String EDIT_CLIENTS = "/api/v1/clients/{id}";
     public static final String DELETE_CLIENTS = "/api/v1/clients/{id}";
@@ -31,8 +31,8 @@ public class ClientRestController {
         this.bankService = bankService;
     }
 
-    @GetMapping(FETCH_CLIENTS)
-    public List<ClientDTO> getClients(
+    @GetMapping(GET_CLIENTS)
+    public List<ClientDto> getClients(
             @RequestParam(value = "order", required = false) String order,
             @RequestParam(value = "dir", required = false) String direction,
             @RequestParam(value = "search", required = false) String searchClient
@@ -41,7 +41,7 @@ public class ClientRestController {
         ClientSorting selectedSorting = getSelectedSorting(sortingProperties, order, direction);
         ClientFilter clientFilter = new ClientFilter(searchClient);
         List<Client> clientsEntity = bankService.findAllClients(clientFilter,selectedSorting);
-        List<ClientDTO> clients = new ArrayList<>();
+        List<ClientDto> clients = new ArrayList<>();
         for (Client client:clientsEntity) {
             clients.add(clientDtoFactory.makeClientDto(client));
         }
@@ -50,7 +50,7 @@ public class ClientRestController {
 
 
     @PostMapping(CREATE_CLIENTS)
-    public ClientDTO createClient(@RequestParam String foolName,
+    public ClientDto createClient(@RequestParam String foolName,
                                   @RequestParam String phoneNumber,
                                   @RequestParam String eMail,
                                   @RequestParam Integer passportNumber) {
@@ -63,7 +63,7 @@ public class ClientRestController {
     }
 
     @PatchMapping(EDIT_CLIENTS)
-    public ClientDTO updateClient(@PathVariable String id,
+    public ClientDto updateClient(@PathVariable String id,
                                   @RequestParam String foolName,
                                   @RequestParam String phoneNumber,
                                   @RequestParam String eMail,

@@ -1,14 +1,14 @@
 package com.alexei.testtask.factories;
 
-import com.alexei.testtask.DTO.ClientDTO;
+import com.alexei.testtask.DTO.ClientDto;
 import com.alexei.testtask.entity.Client;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ClientDtoFactory {
 
-    public ClientDTO makeClientDto (Client client) {
-        return new ClientDTO(
+    public ClientDto makeClientDto (Client client) {
+        return new ClientDto(
                 client.getId(),
                 client.getFoolName(),
                 client.getTelephoneNumber(),

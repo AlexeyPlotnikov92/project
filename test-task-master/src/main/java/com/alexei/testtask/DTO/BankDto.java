@@ -12,13 +12,13 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BankDTO {
+public class BankDto {
 
     private UUID id;
 
     private String name;
 
-    private List<Client> clients;
+    private List<ClientDto> clients;
 
-    private List<Credit> credits;
+    private List<CreditDto> credits;
 }

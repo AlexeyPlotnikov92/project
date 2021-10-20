@@ -9,15 +9,17 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreditDTO {
+public class ClientDto {
 
     private UUID id;
 
-    private Integer creditLimit;
+    private String foolName;
 
-    private Integer interestRate;
+    private String phoneNumber;
+
+    private String eMail;
+
+    private Integer passport;
 
     private UUID bankId;
-
 }
-

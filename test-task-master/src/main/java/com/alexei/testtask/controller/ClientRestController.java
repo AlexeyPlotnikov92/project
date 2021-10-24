@@ -1,6 +1,6 @@
 package com.alexei.testtask.controller;
 
-import com.alexei.testtask.DTO.AskDto;
+import com.alexei.testtask.DTO.AсkDto;
 import com.alexei.testtask.DTO.ClientDto;
 import com.alexei.testtask.entity.Client;
 import com.alexei.testtask.factories.ClientDtoFactory;
@@ -20,6 +20,7 @@ import java.util.UUID;
 public class ClientRestController {
 
     public static final String GET_CLIENTS = "/api/v1/clients";
+    public static final String GET_CLIENT = "/api/v1/clients/{id}";
     public static final String CREATE_CLIENTS = "/api/v1/clients";
     public static final String EDIT_CLIENTS = "/api/v1/clients/{id}";
     public static final String DELETE_CLIENTS = "/api/v1/clients/{id}";
@@ -48,6 +49,16 @@ public class ClientRestController {
         return clients;
     }
 
+    @GetMapping(GET_CLIENT)
+    public ClientDto getClient(@PathVariable String id) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+        }
+        Client client = bankService.findClientById(UUID.fromString(id));
+        return clientDtoFactory.makeClientDto(client);
+    }
+
+
 
     @PostMapping(CREATE_CLIENTS)
     public ClientDto createClient(@RequestParam String foolName,
@@ -71,6 +82,9 @@ public class ClientRestController {
         if (StringUtils.isEmpty(foolName)) {
             throw new IllegalArgumentException("foolName can't be empty");
         }
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+        }
         Client client = new Client(UUID.fromString(id), foolName, phoneNumber, eMail, passportNumber,
                 bankService.findClientById(UUID.fromString(id)).getBank());
         client = bankService.saveClient(client);
@@ -78,9 +92,12 @@ public class ClientRestController {
     }
 
     @DeleteMapping(DELETE_CLIENTS)
-    public AskDto deleteClient(@PathVariable String id) {
+    public AсkDto deleteClient(@PathVariable String id) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+        }
         bankService.deleteClientById(UUID.fromString(id));
-        return AskDto.makeAnswer(true);
+        return AсkDto.makeAnswer(true);
     }
 
     private ClientSorting getSelectedSorting(List<ClientSorting> sortingProperties, String order, String dir) {

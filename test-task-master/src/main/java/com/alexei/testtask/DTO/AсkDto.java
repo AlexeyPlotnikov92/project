@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AskDto {
+public class AсkDto {
 
     private Boolean answer;
 
-    public static AskDto makeAnswer(Boolean answer) {
-        return new AskDto(answer);
+    public static AсkDto makeAnswer(Boolean answer) {
+        return new AсkDto(answer);
     }
 }

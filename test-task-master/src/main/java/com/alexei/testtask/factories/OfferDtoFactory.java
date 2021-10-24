@@ -1,8 +1,13 @@
 package com.alexei.testtask.factories;
 
+import com.alexei.testtask.DTO.CreditPaymentDto;
 import com.alexei.testtask.DTO.OfferDto;
+import com.alexei.testtask.entity.CreditPayment;
 import com.alexei.testtask.entity.Offer;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class OfferDtoFactory {
@@ -24,4 +29,19 @@ public class OfferDtoFactory {
                 offer.getCreditPayments()
         );
     }
+
+//    private List<CreditPaymentDto> makeCreditPaymentList(List<CreditPayment> offerCreditPays) {
+//        List<CreditPaymentDto> creditPayments = new ArrayList<>();
+//        for (CreditPayment creditPayment : offerCreditPays) {
+//            makeCreditPayment(creditPayment);
+//        }
+//        return creditPayments;
+//    }
+//
+//    private CreditPaymentDto makeCreditPayment(CreditPayment creditPayment) {
+//        return new CreditPaymentDto(creditPayment.getPaymentDate(),
+//                creditPayment.getAmountPayment(),
+//                creditPayment.getRepaymentLoanBody(),
+//                creditPayment.getInterestRepayment());
+//    }
 }

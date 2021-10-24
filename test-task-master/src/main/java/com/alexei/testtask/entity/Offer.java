@@ -65,14 +65,14 @@ public class Offer implements Serializable {
         return creditPayments;
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class CreditPayment {
-        private String paymentDate;
-        private Double amountPayment;
-        private Double repaymentLoanBody;
-        private Double interestRepayment;
-    }
+//    @Data
+//    @AllArgsConstructor
+//    @NoArgsConstructor
+//    public static class CreditPayment {
+//        private String paymentDate;
+//        private Double amountPayment;
+//        private Double repaymentLoanBody;
+//        private Double interestRepayment;
+//    }
 
 }

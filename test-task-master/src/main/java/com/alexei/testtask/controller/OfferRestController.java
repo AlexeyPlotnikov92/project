@@ -1,6 +1,6 @@
 package com.alexei.testtask.controller;
 
-import com.alexei.testtask.DTO.AskDto;
+import com.alexei.testtask.DTO.AсkDto;
 import com.alexei.testtask.DTO.OfferDto;
 import com.alexei.testtask.entity.Bank;
 import com.alexei.testtask.entity.Offer;
@@ -19,6 +19,7 @@ import java.util.UUID;
 public class OfferRestController {
 
     public static final String GET_OFFERS = "/api/v1/offers";
+    public static final String GET_OFFER = "/api/v1/offers/{id}";
     public static final String CREATE_OFFERS = "/api/v1/offers";
     public static final String EDIT_OFFERS = "/api/v1/offers/{id}";
     public static final String DELETE_OFFERS = "/api/v1/offers/{id}";
@@ -32,12 +33,6 @@ public class OfferRestController {
 
     @GetMapping(GET_OFFERS)
     public List<OfferDto> getOffers() {
-        Bank bank;
-        if (bankService.findAllBanks().size() < 1) {
-            throw new IllegalArgumentException("bank not created");
-        } else {
-            bank = bankService.findOnlyBank();
-        }
         List<Offer> offersEntity = bankService.findAllOffer();
         List<OfferDto> offers = new ArrayList<>();
         for (Offer offer : offersEntity) {
@@ -46,10 +41,25 @@ public class OfferRestController {
         return offers;
     }
 
+    @GetMapping(GET_OFFER)
+    public OfferDto getOffer(@PathVariable String id) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("кредитное предложение с таким Id %s не найдено", id));
+        }
+        Offer offer = bankService.findOfferById(UUID.fromString(id));
+        return offerDtoFactory.makeOfferDto(offer);
+    }
+
     @PostMapping(CREATE_OFFERS)
     public OfferDto createOffer(@RequestParam String clientId,
                                 @RequestParam String creditId,
                                 @RequestParam Integer creditAmount) {
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
+        }
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
+        }
         if (StringUtils.isEmpty(clientId) || StringUtils.isEmpty(creditId)) {
            throw new IllegalArgumentException("offer have not client or credit");
         }
@@ -63,20 +73,24 @@ public class OfferRestController {
 
     @PatchMapping(EDIT_OFFERS)
     public OfferDto updateOffer(@PathVariable String id,
-                                @RequestParam String clientId,
-                                @RequestParam String creditId,
                                 @RequestParam Integer creditAmount) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("кредитное предложение с таким Id %s не найдено", id));
+        }
         Offer offer = new Offer(UUID.fromString(id),
-                bankService.findClientById(UUID.fromString(clientId)),
-                bankService.findCreditById(UUID.fromString(creditId)),
+                bankService.findOfferById(UUID.fromString(id)).getClient(),
+                bankService.findOfferById(UUID.fromString(id)).getCredit(),
                 creditAmount);
         bankService.saveOffer(offer);
         return offerDtoFactory.makeOfferDto(offer);
     }
 
     @DeleteMapping(DELETE_OFFERS)
-    public AskDto deleteOffer(@PathVariable String id) {
+    public AсkDto deleteOffer(@PathVariable String id) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("кредитное предложение с таким Id %s не найдено", id));
+        }
         bankService.deleteOfferById(UUID.fromString(id));
-        return AskDto.makeAnswer(true);
+        return AсkDto.makeAnswer(true);
     }
 }

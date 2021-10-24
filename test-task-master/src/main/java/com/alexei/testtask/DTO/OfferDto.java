@@ -1,8 +1,6 @@
 package com.alexei.testtask.DTO;
 
-import com.alexei.testtask.entity.Client;
-import com.alexei.testtask.entity.Credit;
-import com.alexei.testtask.entity.Offer;
+import com.alexei.testtask.entity.CreditPayment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +21,5 @@ public class OfferDto {
 
     private Integer creditAmount;
 
-    private List<Offer.CreditPayment> creditPayments;
+    private List<CreditPayment> creditPayments;
 }

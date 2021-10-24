@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -157,7 +158,14 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<Offer> findAllOffer() {
-        return daoOffer.findAll();
+        List<Offer> offers = new ArrayList<>();
+        for (Offer offer : daoOffer.findAll()) {
+            offers.add(new Offer(offer.getId(),
+                    offer.getClient(),
+                    offer.getCredit(),
+                    offer.getCreditAmount()));
+        }
+        return offers;
     }
 
     @Override
@@ -166,8 +174,6 @@ public class BankServiceImpl implements BankService {
                 "%d не найдено", id)));
         Offer offer = new Offer(o.getId(), o.getClient(), o.getCredit(), o.getCreditAmount());
         return offer;
-//        return daoOffer.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Кредитное предложение с Id = " +
-//                "%d не найдено", id)));
 
     }
 

@@ -37,6 +37,9 @@ public class BankController {
 
     @GetMapping("/{id}")
     public ModelAndView getBankById(@PathVariable String id) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+            throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
+        }
         ModelAndView modelAndView = new ModelAndView("bank");
         Bank bank = bankService.findBankById(UUID.fromString(id));
         modelAndView.addObject("bank", bank);
@@ -49,6 +52,12 @@ public class BankController {
     public ModelAndView createBank(@RequestParam String name,
                                    @RequestParam(required = false) String clientId,
                                    @RequestParam(required = false) String creditId) {
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
+        }
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
+        }
         List<Client> clients = new ArrayList<>();
         if (StringUtils.isNotEmpty(clientId)) {
             clients.add(bankService.findClientById(UUID.fromString(clientId)));
@@ -72,6 +81,15 @@ public class BankController {
                                    @RequestParam String name,
                                    @RequestParam(required = false) String clientId,
                                    @RequestParam(required = false) String creditId) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+            throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
+        }
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
+        }
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
+        }
         List<Client> clients = bankService.findBankById(UUID.fromString(id)).getClients();
         if (StringUtils.isNotEmpty(clientId)) {
             clients.add(bankService.findClientById(UUID.fromString(clientId)));
@@ -90,6 +108,9 @@ public class BankController {
 
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+            throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
+        }
         log.info("delete bank{}", bankService.findBankById(UUID.fromString(id)));
         bankService.deleteBankById(UUID.fromString(id));
         return new ModelAndView("redirect:/admin/banks");

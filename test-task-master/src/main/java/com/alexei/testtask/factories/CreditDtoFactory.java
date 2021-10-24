@@ -12,7 +12,7 @@ public class CreditDtoFactory {
                 credit.getId(),
                 credit.getCreditLimit(),
                 credit.getInterestRate(),
-                credit.getBank().getId()
+                credit.getBank() != null ? credit.getBank().getId() : null
         );
     }
 }

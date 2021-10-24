@@ -27,6 +27,7 @@
       }
 
 
+
     </style>
 
 </head>
@@ -52,35 +53,33 @@
     <div class="row align-items-start">
         <div class="col-sm-2">
             <nav class="navbar navbar-light bg-light">
-                <div class="container row align-items-start">
-                    <form>
-                        <div class="row">
-                            <p>Сортировка:</p>
-                        </div>
-                        <div class="row">
-                            <select name="order" onchange="this.form.submit()">
-                                <option value="">Без сортировки</option>
-                                <option th:each="sort:${sorting}"
-                                        th:selected="${sort.column == selectedSorting.column}"
-                                        th:text="${sort.displayName}"
-                                        th:value="${sort.column}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <select name="dir" onchange="this.form.submit()">
-                                <option th:selected="${'ASC' == (selectedSorting==null?'ASC':selectedSorting.direction.name)}"
-                                        value="ASC">
-                                    По возрастанию
-                                </option>
-                                <option th:selected="${'DESC' == (selectedSorting==null?'DESC':selectedSorting.direction.name)}"
-                                        value="DESC">
-                                    По убыванию
-                                </option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
+                <form>
+                    <div class="row">
+                        <p>Сортировка:</p>
+                    </div>
+                    <div class="row">
+                        <select name="order" onchange="this.form.submit()">
+                            <option value="">Без сортировки</option>
+                            <option th:each="sort:${sorting}"
+                                    th:selected="${sort.column == selectedSorting.column}"
+                                    th:text="${sort.displayName}"
+                                    th:value="${sort.column}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <select name="dir" onchange="this.form.submit()">
+                            <option th:selected="${'ASC' == (selectedSorting==null?'ASC':selectedSorting.direction.name)}"
+                                    value="ASC">
+                                По возрастанию
+                            </option>
+                            <option th:selected="${'DESC' == (selectedSorting==null?'DESC':selectedSorting.direction.name)}"
+                                    value="DESC">
+                                По убыванию
+                            </option>
+                        </select>
+                    </div>
+                </form>
             </nav>
         </div>
         <div class="col-sm-8">

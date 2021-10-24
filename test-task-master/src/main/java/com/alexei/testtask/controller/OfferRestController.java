@@ -2,7 +2,6 @@ package com.alexei.testtask.controller;
 
 import com.alexei.testtask.DTO.AсkDto;
 import com.alexei.testtask.DTO.OfferDto;
-import com.alexei.testtask.entity.Bank;
 import com.alexei.testtask.entity.Offer;
 import com.alexei.testtask.factories.OfferDtoFactory;
 import com.alexei.testtask.service.BankService;
@@ -61,7 +60,7 @@ public class OfferRestController {
             throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
         }
         if (StringUtils.isEmpty(clientId) || StringUtils.isEmpty(creditId)) {
-           throw new IllegalArgumentException("offer have not client or credit");
+            throw new IllegalArgumentException("offer have not client or credit");
         }
         Offer offer = new Offer(null,
                 bankService.findClientById(UUID.fromString(clientId)),

@@ -2,7 +2,6 @@ package com.alexei.testtask.controller;
 
 import com.alexei.testtask.entity.Credit;
 import com.alexei.testtask.service.BankService;
-import com.alexei.testtask.service.ClientSorting;
 import com.alexei.testtask.service.CreditSorting;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -38,7 +37,7 @@ public class CreditController {
 
     @GetMapping("/{id}")
     public ModelAndView getCreditById(@PathVariable String id) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
         }
         ModelAndView modelAndView = new ModelAndView("credit");
@@ -61,7 +60,7 @@ public class CreditController {
     public ModelAndView updateCredit(@PathVariable String id,
                                      @RequestParam Integer creditLimit,
                                      @RequestParam Integer interestRate) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
         }
         Credit credit = new Credit(UUID.fromString(id), creditLimit, interestRate,
@@ -72,7 +71,7 @@ public class CreditController {
 
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
         }
         bankService.deleteCreditById(UUID.fromString(id));

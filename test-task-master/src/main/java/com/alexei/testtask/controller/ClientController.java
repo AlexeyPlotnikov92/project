@@ -41,7 +41,7 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ModelAndView getClient(@PathVariable String id) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
         }
         ModelAndView modelAndView = new ModelAndView("client");
@@ -67,7 +67,7 @@ public class ClientController {
                                      @RequestParam String phoneNumber,
                                      @RequestParam String eMail,
                                      @RequestParam Integer passportNumber) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
         }
         if (StringUtils.isNotEmpty(foolName)) {
@@ -80,7 +80,7 @@ public class ClientController {
 
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
         }
         bankService.deleteClientById(UUID.fromString(id));

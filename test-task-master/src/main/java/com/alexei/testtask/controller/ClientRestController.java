@@ -41,9 +41,9 @@ public class ClientRestController {
         List<ClientSorting> sortingProperties = bankService.getSortingClientsProperties();
         ClientSorting selectedSorting = getSelectedSorting(sortingProperties, order, direction);
         ClientFilter clientFilter = new ClientFilter(searchClient);
-        List<Client> clientsEntity = bankService.findAllClients(clientFilter,selectedSorting);
+        List<Client> clientsEntity = bankService.findAllClients(clientFilter, selectedSorting);
         List<ClientDto> clients = new ArrayList<>();
-        for (Client client:clientsEntity) {
+        for (Client client : clientsEntity) {
             clients.add(clientDtoFactory.makeClientDto(client));
         }
         return clients;
@@ -51,14 +51,23 @@ public class ClientRestController {
 
     @GetMapping(GET_CLIENT)
     public ClientDto getClient(@PathVariable String id) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
         }
         Client client = bankService.findClientById(UUID.fromString(id));
         return clientDtoFactory.makeClientDto(client);
     }
 
-
+//    @GetMapping(GET_CLIENT)
+//    public HttpEntity<ClientDto> getClient(@PathVariable String id) {
+//        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+//            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+//        }
+//        Client client = bankService.findClientById(UUID.fromString(id));
+//        ClientDto clientDto = clientDtoFactory.makeClientDto(client);
+//        clientDto.add((Iterable<Link>) linkTo(methodOn(ClientRestController.class).getClient(id)).withSelfRel());
+//        return new ResponseEntity<>(clientDto, HttpStatus.OK);
+//    }
 
     @PostMapping(CREATE_CLIENTS)
     public ClientDto createClient(@RequestParam String foolName,
@@ -82,7 +91,7 @@ public class ClientRestController {
         if (StringUtils.isEmpty(foolName)) {
             throw new IllegalArgumentException("foolName can't be empty");
         }
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
         }
         Client client = new Client(UUID.fromString(id), foolName, phoneNumber, eMail, passportNumber,
@@ -93,7 +102,7 @@ public class ClientRestController {
 
     @DeleteMapping(DELETE_CLIENTS)
     public AсkDto deleteClient(@PathVariable String id) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")){
+        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
         }
         bankService.deleteClientById(UUID.fromString(id));

@@ -49,11 +49,11 @@ public class BankServiceImpl implements BankService {
         return daoClient.findAll(getSpecClient(clientFilter),
                 Sort.by(Sort.Direction.valueOf(sorting.getDirection().name()), sorting.getColumn()));
     }
-
+// client with this id was not found
     @Override
     public Client findClientById(UUID id) {
-        return daoClient.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Клиент с Id = " +
-                "%d не найден", id)));
+        return daoClient.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("client with this Id = " +
+                "%d was not found", id)));
     }
 
     @Override
@@ -84,8 +84,8 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public Credit findCreditById(UUID id) {
-        return daoCredit.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Кредит с Id = " +
-                "%d не найден", id)));
+        return daoCredit.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("credit with this Id = " +
+        "%d was not found", id)));
     }
 
     @Override
@@ -114,8 +114,8 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public Bank findBankById(UUID id) {
-        return daoBank.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Банк с Id = " +
-                "%d не найден", id)));
+        return daoBank.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("bank with this Id = " +
+        "%d was not found", id)));
     }
 
     @Override
@@ -170,8 +170,8 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public Offer findOfferById(UUID id) {
-        Offer o = daoOffer.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Кредитное предложение с Id = " +
-                "%d не найдено", id)));
+        Offer o = daoOffer.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("offer with this Id = " +
+                "%d was not found", id)));
         Offer offer = new Offer(o.getId(), o.getClient(), o.getCredit(), o.getCreditAmount());
         return offer;
 

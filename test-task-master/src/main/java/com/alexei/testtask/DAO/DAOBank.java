@@ -9,11 +9,4 @@ import java.util.UUID;
 @Repository
 public interface DAOBank extends JpaRepository<Bank, UUID> {
 
-//    List<Bank> findAll();
-//
-//    Optional<Bank> findById(UUID id);
-//
-//    Bank save(Bank bank);
-//
-//    void deleteB(String id);
 }

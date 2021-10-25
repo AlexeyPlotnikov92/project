@@ -52,10 +52,10 @@ public class BankController {
     public ModelAndView createBank(@RequestParam String name,
                                    @RequestParam(required = false) String clientId,
                                    @RequestParam(required = false) String creditId) {
-        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
         }
-        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
             throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
         }
         List<Client> clients = new ArrayList<>();
@@ -84,10 +84,10 @@ public class BankController {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
         }
-        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
             throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
         }
-        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
             throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
         }
         List<Client> clients = bankService.findBankById(UUID.fromString(id)).getClients();

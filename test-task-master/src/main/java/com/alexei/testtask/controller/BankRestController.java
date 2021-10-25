@@ -58,6 +58,9 @@ public class BankRestController {
     public BankDto createBank(@RequestParam String name,
                               @RequestParam(required = false) String clientId,
                               @RequestParam(required = false) String creditId) {
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("name can't be empty");
+        }
         if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
             throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
         }
@@ -88,6 +91,9 @@ public class BankRestController {
                               @RequestParam String name,
                               @RequestParam(required = false) String clientId,
                               @RequestParam(required = false) String creditId) {
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("name can't be empty");
+        }
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
             throw new IllegalArgumentException(String.format("bank with this Id %s was not found", id));
         }

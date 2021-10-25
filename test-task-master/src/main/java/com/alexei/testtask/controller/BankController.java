@@ -52,26 +52,28 @@ public class BankController {
     public ModelAndView createBank(@RequestParam String name,
                                    @RequestParam(required = false) String clientId,
                                    @RequestParam(required = false) String creditId) {
-        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
-            throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
-        }
-        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
-            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
-        }
-        List<Client> clients = new ArrayList<>();
-        if (StringUtils.isNotEmpty(clientId)) {
-            clients.add(bankService.findClientById(UUID.fromString(clientId)));
-        }
-        List<Credit> credits = new ArrayList<>();
-        if (StringUtils.isNotEmpty(creditId)) {
-            credits.add(bankService.findCreditById(UUID.fromString(creditId)));
-        }
         if (StringUtils.isNotEmpty(name)) {
-            Bank bank = new Bank(null, name, clients, credits);
-            bankService.saveBank(bank);
-            log.info("create bank {}", bank.getId());
-            log.info("clients {}", bank.getClients());
-            log.info("credits {}", bank.getCredits());
+            if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
+                throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
+            }
+            if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
+                throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
+            }
+            List<Client> clients = new ArrayList<>();
+            if (StringUtils.isNotEmpty(clientId)) {
+                clients.add(bankService.findClientById(UUID.fromString(clientId)));
+            }
+            List<Credit> credits = new ArrayList<>();
+            if (StringUtils.isNotEmpty(creditId)) {
+                credits.add(bankService.findCreditById(UUID.fromString(creditId)));
+            }
+            if (StringUtils.isNotEmpty(name)) {
+                Bank bank = new Bank(null, name, clients, credits);
+                bankService.saveBank(bank);
+                log.info("create bank {}", bank.getId());
+                log.info("clients {}", bank.getClients());
+                log.info("credits {}", bank.getCredits());
+            }
         }
         return new ModelAndView("redirect:/admin/banks");
     }
@@ -81,27 +83,29 @@ public class BankController {
                                    @RequestParam String name,
                                    @RequestParam(required = false) String clientId,
                                    @RequestParam(required = false) String creditId) {
-        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("bank with this Id %s was not found", id));
-        }
-        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
-            throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
-        }
-        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
-            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
-        }
-        List<Client> clients = bankService.findBankById(UUID.fromString(id)).getClients();
-        if (StringUtils.isNotEmpty(clientId)) {
-            clients.add(bankService.findClientById(UUID.fromString(clientId)));
-        }
-        List<Credit> credits = bankService.findBankById(UUID.fromString(id)).getCredits();
-        if (StringUtils.isNotEmpty(creditId)) {
-            credits.add(bankService.findCreditById(UUID.fromString(creditId)));
-        }
         if (StringUtils.isNotEmpty(name)) {
-            Bank bank = new Bank(UUID.fromString(id), name, clients, credits);
-            bankService.saveBank(bank);
-            log.info("update bank{}", bank.getId());
+            if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
+                throw new IllegalArgumentException(String.format("bank with this Id %s was not found", id));
+            }
+            if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
+                throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
+            }
+            if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
+                throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
+            }
+            List<Client> clients = bankService.findBankById(UUID.fromString(id)).getClients();
+            if (StringUtils.isNotEmpty(clientId)) {
+                clients.add(bankService.findClientById(UUID.fromString(clientId)));
+            }
+            List<Credit> credits = bankService.findBankById(UUID.fromString(id)).getCredits();
+            if (StringUtils.isNotEmpty(creditId)) {
+                credits.add(bankService.findCreditById(UUID.fromString(creditId)));
+            }
+            if (StringUtils.isNotEmpty(name)) {
+                Bank bank = new Bank(UUID.fromString(id), name, clients, credits);
+                bankService.saveBank(bank);
+                log.info("update bank{}", bank.getId());
+            }
         }
         return new ModelAndView("redirect:/admin/banks");
     }

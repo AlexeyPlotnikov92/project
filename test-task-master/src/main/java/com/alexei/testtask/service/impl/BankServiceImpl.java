@@ -49,7 +49,6 @@ public class BankServiceImpl implements BankService {
         return daoClient.findAll(getSpecClient(clientFilter),
                 Sort.by(Sort.Direction.valueOf(sorting.getDirection().name()), sorting.getColumn()));
     }
-// client with this id was not found
     @Override
     public Client findClientById(UUID id) {
         return daoClient.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("client with this Id = " +

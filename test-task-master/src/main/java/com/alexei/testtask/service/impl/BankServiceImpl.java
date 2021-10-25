@@ -114,7 +114,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public Bank findBankById(UUID id) {
-        return daoBank.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Жанр с Id = " +
+        return daoBank.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Банк с Id = " +
                 "%d не найден", id)));
     }
 

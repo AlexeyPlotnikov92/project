@@ -52,7 +52,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public Client findClientById(UUID id) {
         return daoClient.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("client with this Id = " +
-                "%d was not found", id)));
+                "%s was not found", id)));
     }
 
     @Override
@@ -84,7 +84,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public Credit findCreditById(UUID id) {
         return daoCredit.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("credit with this Id = " +
-        "%d was not found", id)));
+        "%s was not found", id)));
     }
 
     @Override
@@ -114,7 +114,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public Bank findBankById(UUID id) {
         return daoBank.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("bank with this Id = " +
-        "%d was not found", id)));
+        "%s was not found", id)));
     }
 
     @Override
@@ -170,7 +170,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public Offer findOfferById(UUID id) {
         Offer o = daoOffer.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("offer with this Id = " +
-                "%d was not found", id)));
+                "%s was not found", id)));
         Offer offer = new Offer(o.getId(), o.getClient(), o.getCredit(), o.getCreditAmount());
         return offer;
 

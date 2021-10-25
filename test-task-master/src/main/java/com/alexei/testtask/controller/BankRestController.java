@@ -47,7 +47,7 @@ public class BankRestController {
     @GetMapping(GET_BANK)
     public BankDto getBank(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("bank with this Id %s was not found", id));
         }
         Bank bank = bankService.findBankById(UUID.fromString(id));
         return bankDtoFactory.makeBankDto(bank);
@@ -58,11 +58,11 @@ public class BankRestController {
     public BankDto createBank(@RequestParam String name,
                               @RequestParam(required = false) String clientId,
                               @RequestParam(required = false) String creditId) {
-        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
+            throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
         }
-        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
         }
         List<Client> clients = new ArrayList<>();
         if (StringUtils.isNotEmpty(clientId)) {
@@ -89,13 +89,13 @@ public class BankRestController {
                               @RequestParam(required = false) String clientId,
                               @RequestParam(required = false) String creditId) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("bank with this Id %s was not found", id));
         }
-        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
+        if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(clientId)) {
+            throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
         }
-        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
+        if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}") && StringUtils.isNotEmpty(creditId)) {
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
         }
         List<Client> clients = bankService.findBankById(UUID.fromString(id)).getClients();
         if (StringUtils.isNotEmpty(clientId)) {
@@ -119,7 +119,7 @@ public class BankRestController {
     @DeleteMapping(DELETE_BANKS)
     public AсkDto deleteOffer(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("банк с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("bank with this Id %s was not found", id));
         }
         bankService.deleteBankById(UUID.fromString(id));
         return AсkDto.makeAnswer(true);

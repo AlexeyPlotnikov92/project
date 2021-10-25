@@ -38,7 +38,7 @@ public class CreditController {
     @GetMapping("/{id}")
     public ModelAndView getCreditById(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", id));
         }
         ModelAndView modelAndView = new ModelAndView("credit");
         modelAndView.addObject("credit", bankService.findCreditById(UUID.fromString(id)));
@@ -61,7 +61,7 @@ public class CreditController {
                                      @RequestParam Integer creditLimit,
                                      @RequestParam Integer interestRate) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", id));
         }
         Credit credit = new Credit(UUID.fromString(id), creditLimit, interestRate,
                 bankService.findCreditById(UUID.fromString(id)).getBank());
@@ -72,7 +72,7 @@ public class CreditController {
     @PostMapping("/{id}/remove")
     public ModelAndView delete(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", id));
         }
         bankService.deleteCreditById(UUID.fromString(id));
         return new ModelAndView("redirect:/admin/credits");

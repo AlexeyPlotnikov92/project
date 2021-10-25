@@ -43,7 +43,7 @@ public class OfferRestController {
     @GetMapping(GET_OFFER)
     public OfferDto getOffer(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредитное предложение с таким Id %s не найдено", id));
+            throw new IllegalArgumentException(String.format("offer with this Id %s was not found", id));
         }
         Offer offer = bankService.findOfferById(UUID.fromString(id));
         return offerDtoFactory.makeOfferDto(offer);
@@ -54,10 +54,10 @@ public class OfferRestController {
                                 @RequestParam String creditId,
                                 @RequestParam Integer creditAmount) {
         if (!clientId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", clientId));
+            throw new IllegalArgumentException(String.format("client with this Id %s was not found", clientId));
         }
         if (!creditId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", creditId));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", creditId));
         }
         if (StringUtils.isEmpty(clientId) || StringUtils.isEmpty(creditId)) {
             throw new IllegalArgumentException("offer have not client or credit");
@@ -74,7 +74,7 @@ public class OfferRestController {
     public OfferDto updateOffer(@PathVariable String id,
                                 @RequestParam Integer creditAmount) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредитное предложение с таким Id %s не найдено", id));
+            throw new IllegalArgumentException(String.format("offer with this Id %s was not found", id));
         }
         Offer offer = new Offer(UUID.fromString(id),
                 bankService.findOfferById(UUID.fromString(id)).getClient(),
@@ -87,7 +87,7 @@ public class OfferRestController {
     @DeleteMapping(DELETE_OFFERS)
     public AсkDto deleteOffer(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредитное предложение с таким Id %s не найдено", id));
+            throw new IllegalArgumentException(String.format("offer with this Id %s was not found", id));
         }
         bankService.deleteOfferById(UUID.fromString(id));
         return AсkDto.makeAnswer(true);

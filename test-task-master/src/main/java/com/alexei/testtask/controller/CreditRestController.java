@@ -48,7 +48,7 @@ public class CreditRestController {
     @GetMapping(GET_CREDIT)
     public CreditDto getCredit(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", id));
         }
         Credit credit = bankService.findCreditById(UUID.fromString(id));
         return creditDtoFactory.makeCreditDto(credit);
@@ -67,7 +67,7 @@ public class CreditRestController {
                                   @RequestParam Integer creditLimit,
                                   @RequestParam Integer interestRate) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", id));
         }
         Credit credit = new Credit(UUID.fromString(id), creditLimit, interestRate,
                 bankService.findCreditById(UUID.fromString(id)).getBank());
@@ -78,7 +78,7 @@ public class CreditRestController {
     @DeleteMapping(DELETE_CREDITS)
     public AсkDto deleteCredit(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("кредит с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("credit with this Id %s was not found", id));
         }
         bankService.deleteCreditById(UUID.fromString(id));
         return AсkDto.makeAnswer(true);

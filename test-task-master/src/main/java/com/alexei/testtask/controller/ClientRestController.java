@@ -52,22 +52,11 @@ public class ClientRestController {
     @GetMapping(GET_CLIENT)
     public ClientDto getClient(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("client with this Id %s was not found", id));
         }
         Client client = bankService.findClientById(UUID.fromString(id));
         return clientDtoFactory.makeClientDto(client);
     }
-
-//    @GetMapping(GET_CLIENT)
-//    public HttpEntity<ClientDto> getClient(@PathVariable String id) {
-//        if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-//            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
-//        }
-//        Client client = bankService.findClientById(UUID.fromString(id));
-//        ClientDto clientDto = clientDtoFactory.makeClientDto(client);
-//        clientDto.add((Iterable<Link>) linkTo(methodOn(ClientRestController.class).getClient(id)).withSelfRel());
-//        return new ResponseEntity<>(clientDto, HttpStatus.OK);
-//    }
 
     @PostMapping(CREATE_CLIENTS)
     public ClientDto createClient(@RequestParam String foolName,
@@ -92,7 +81,7 @@ public class ClientRestController {
             throw new IllegalArgumentException("foolName can't be empty");
         }
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("client with this Id %s was not found", id));
         }
         Client client = new Client(UUID.fromString(id), foolName, phoneNumber, eMail, passportNumber,
                 bankService.findClientById(UUID.fromString(id)).getBank());
@@ -103,7 +92,7 @@ public class ClientRestController {
     @DeleteMapping(DELETE_CLIENTS)
     public AсkDto deleteClient(@PathVariable String id) {
         if (!id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-            throw new IllegalArgumentException(String.format("клиент с таким Id %s не найден", id));
+            throw new IllegalArgumentException(String.format("client with this Id %s was not found", id));
         }
         bankService.deleteClientById(UUID.fromString(id));
         return AсkDto.makeAnswer(true);

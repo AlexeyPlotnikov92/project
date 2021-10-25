@@ -1,13 +1,8 @@
 package com.alexei.testtask.factories;
 
-import com.alexei.testtask.DTO.CreditPaymentDto;
 import com.alexei.testtask.DTO.OfferDto;
-import com.alexei.testtask.entity.CreditPayment;
 import com.alexei.testtask.entity.Offer;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class OfferDtoFactory {

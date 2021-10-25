@@ -14,8 +14,8 @@ import java.util.List;
 @Component
 public class BankDtoFactory {
 
-   private final ClientDtoFactory clientDtoFactory;
-   private final CreditDtoFactory creditDtoFactory;
+    private final ClientDtoFactory clientDtoFactory;
+    private final CreditDtoFactory creditDtoFactory;
 
     public BankDtoFactory(ClientDtoFactory clientDtoFactory, CreditDtoFactory creditDtoFactory) {
         this.clientDtoFactory = clientDtoFactory;
@@ -34,7 +34,7 @@ public class BankDtoFactory {
 
     public List<ClientDto> clientDtoList(List<Client> clients) {
         List<ClientDto> list = new ArrayList<>();
-        for (Client client:clients) {
+        for (Client client : clients) {
             ClientDto clientDto = clientDtoFactory.makeClientDto(client);
             list.add(clientDto);
         }
@@ -43,7 +43,7 @@ public class BankDtoFactory {
 
     public List<CreditDto> creditDtoList(List<Credit> credits) {
         List<CreditDto> list = new ArrayList<>();
-        for (Credit credit:credits) {
+        for (Credit credit : credits) {
             CreditDto creditDto = creditDtoFactory.makeCreditDto(credit);
             list.add(creditDto);
         }
